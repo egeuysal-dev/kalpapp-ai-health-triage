@@ -1088,4 +1088,69 @@ class AppStrings {
         ? '$message • Selected risk factors: $riskCount'
         : '$message • Seçilen risk faktörü: $riskCount';
   }
+
+      // Monitored Person Detail Screen
+  String get connection => isEnglish ? 'Connection' : 'Bağlantı';
+
+  String get demoActive => isEnglish ? 'Demo active' : 'Demo aktif';
+
+  String get dataType => isEnglish ? 'Data Type' : 'Veri Tipi';
+
+  String get heartRateSimulation =>
+      isEnglish ? 'Heart rate simulation' : 'Kalp ritmi simülasyonu';
+
+  String get wearablePrototypeInfo => isEnglish
+      ? 'In this prototype, the physical wearable is simulated. In the real product, the device ID would be matched with live sensor data from the physical wearable.'
+      : 'Bu prototipte fiziksel bileklik simüle edilmektedir. Gerçek üründe cihaz ID, fiziksel bileklikten gelen canlı sensör verileriyle eşleşir.';
+
+  String get noClearRiskFactor =>
+      isEnglish ? 'No clear risk factor' : 'Belirgin risk faktörü yok';
+
+  String selectedRiskFactorCount(int count) {
+    return isEnglish
+        ? 'Selected risk factors: $count'
+        : 'Seçili risk faktörü: $count';
+  }
+
+  String get yes => isEnglish ? 'Yes' : 'Evet';
+
+  String get no => isEnglish ? 'No' : 'Hayır';
+
+  String get medicationsPrefix =>
+      isEnglish ? 'Medications' : 'İlaçlar';
+
+  String get demoSimulation =>
+      isEnglish ? 'Demo Simulation' : 'Demo Simülasyon';
+
+  String get demoSimulationMessage => isEnglish
+      ? 'During the presentation, you can simulate different heart rhythm states as if data were coming from a physical wearable.'
+      : 'Sunum sırasında fiziksel bileklikten veri geliyormuş gibi farklı kalp ritmi durumları oluşturabilirsiniz.';
+
+  String get simulateCriticalAlert =>
+      isEnglish ? 'Simulate Critical Alert' : 'Kritik Uyarı Simüle Et';
+
+  String get realUseEmergencyInfo => isEnglish
+      ? 'In real use, when a critical rhythm alert is received, the person should be checked. If there is loss of consciousness, chest pain, or shortness of breath, 112 should be called.'
+      : 'Gerçek kullanımda kritik ritim uyarısı alındığında kişi kontrol edilmeli; bilinç kaybı, göğüs ağrısı veya nefes darlığı varsa 112 aranmalıdır.';
+
+  String riskFactorLabel(String label) {
+    if (!isEnglish) return label;
+
+    switch (label) {
+      case 'Önceki Kalp Krizi':
+        return 'Previous Heart Attack';
+      case 'Kalp Hastalığı':
+        return 'Heart Disease';
+      case 'Hipertansiyon':
+        return 'Hypertension';
+      case 'Diyabet':
+        return 'Diabetes';
+      case 'Yüksek Kolesterol':
+        return 'High Cholesterol';
+      case 'Sigara':
+        return 'Smoking';
+      default:
+        return label;
+    }
+  }
 }

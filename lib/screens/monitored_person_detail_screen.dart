@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/detail_dialogs.dart';
 import '../models/monitored_person.dart';
 import '../services/monitored_person_service.dart';
@@ -16,6 +18,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     if (status == 'Düşük kalp ritmi uyarısı') return Colors.orange;
     if (status == 'Yüksek kalp ritmi uyarısı') return Colors.deepOrange;
     if (status == 'Normal') return Colors.green;
+
     return Colors.blueGrey;
   }
 
@@ -24,15 +27,8 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     if (status == 'Düşük kalp ritmi uyarısı') return Icons.arrow_downward;
     if (status == 'Yüksek kalp ritmi uyarısı') return Icons.arrow_upward;
     if (status == 'Normal') return Icons.check_circle_outline;
-    return Icons.info_outline;
-  }
 
-  String _shortStatus(String status) {
-    if (status == 'Kritik uyarı') return 'Kritik';
-    if (status == 'Düşük kalp ritmi uyarısı') return 'Düşük Ritim';
-    if (status == 'Yüksek kalp ritmi uyarısı') return 'Yüksek Ritim';
-    if (status == 'Normal') return 'Normal';
-    return status;
+    return Icons.info_outline;
   }
 
   Future<void> _showCriticalAlertDialog(
@@ -46,7 +42,11 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderCard(MonitoredPerson currentPerson) {
+  Widget _buildHeaderCard(
+    BuildContext context,
+    MonitoredPerson currentPerson,
+  ) {
+    final t = AppStrings.of(context);
     final color = _statusColor(currentPerson.status);
 
     return Container(
@@ -56,7 +56,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             color,
-            color.withOpacity(0.72),
+            color.withValues(alpha: 0.72),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -64,7 +64,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.25),
+            color: color.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -78,7 +78,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
                 width: 74,
                 height: 74,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.18),
+                  color: Colors.white.withValues(alpha: 0.18),
                   borderRadius: BorderRadius.circular(22),
                 ),
                 child: Icon(
@@ -104,7 +104,11 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      '${currentPerson.relation} • ${currentPerson.age} yaş • ${currentPerson.gender}',
+                      t.relationAgeGender(
+                        relation: currentPerson.relation,
+                        age: currentPerson.age,
+                        gender: currentPerson.gender,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -130,11 +134,11 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.17),
+              color: Colors.white.withValues(alpha: 0.17),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Text(
-              _shortStatus(currentPerson.status),
+              t.shortPersonStatusText(currentPerson.status),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -143,7 +147,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           Text(
-            'Son ölçüm: ${currentPerson.lastMeasurement}',
+            '${t.lastMeasurement}: ${currentPerson.lastMeasurement}',
             style: const TextStyle(
               color: Colors.white70,
               fontWeight: FontWeight.w500,
@@ -249,18 +253,32 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPersonInfoCard(MonitoredPerson currentPerson) {
+  Widget _buildPersonInfoCard(
+    BuildContext context,
+    MonitoredPerson currentPerson,
+  ) {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Yakın Bilgileri',
+      title: t.personInformation,
       icon: Icons.person_outline,
       child: Column(
         children: [
-          _buildInfoRow(label: 'Ad Soyad', value: currentPerson.fullName),
-          _buildInfoRow(label: 'Yakınlık', value: currentPerson.relation),
-          _buildInfoRow(label: 'Yaş', value: '${currentPerson.age}'),
           _buildInfoRow(
-            label: 'Cinsiyet',
-            value: currentPerson.gender,
+            label: t.fullNameLabel,
+            value: currentPerson.fullName,
+          ),
+          _buildInfoRow(
+            label: t.relationLabel,
+            value: currentPerson.relation,
+          ),
+          _buildInfoRow(
+            label: t.ageLabel,
+            value: '${currentPerson.age}',
+          ),
+          _buildInfoRow(
+            label: t.genderLabel,
+            value: t.genderText(currentPerson.gender),
             isLast: true,
           ),
         ],
@@ -268,9 +286,14 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDeviceCard(MonitoredPerson currentPerson) {
+  Widget _buildDeviceCard(
+    BuildContext context,
+    MonitoredPerson currentPerson,
+  ) {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Bileklik Bilgileri',
+      title: t.braceletInformation,
       icon: Icons.watch_outlined,
       child: Column(
         children: [
@@ -279,7 +302,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.qr_code_2,
-                  label: 'Cihaz ID',
+                  label: t.deviceId,
                   value: currentPerson.deviceId,
                   color: const Color(0xFF1976D2),
                 ),
@@ -288,8 +311,8 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.cloud_done_outlined,
-                  label: 'Bağlantı',
-                  value: 'Demo aktif',
+                  label: t.connection,
+                  value: t.demoActive,
                   color: Colors.green,
                 ),
               ),
@@ -298,8 +321,8 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _buildMetricPill(
             icon: Icons.sensors,
-            label: 'Veri Tipi',
-            value: 'Kalp ritmi simülasyonu',
+            label: t.dataType,
+            value: t.heartRateSimulation,
             color: Colors.teal,
           ),
           const SizedBox(height: 14),
@@ -310,12 +333,12 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               color: const Color(0xFFE3F2FD),
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: const Color(0xFF1976D2).withOpacity(0.25),
+                color: const Color(0xFF1976D2).withValues(alpha: 0.25),
               ),
             ),
-            child: const Text(
-              'Bu prototipte fiziksel bileklik simüle edilmektedir. Gerçek üründe cihaz ID, fiziksel bileklikten gelen canlı sensör verileriyle eşleşir.',
-              style: TextStyle(
+            child: Text(
+              t.wearablePrototypeInfo,
+              style: const TextStyle(
                 color: Color(0xFF0D47A1),
                 height: 1.45,
                 fontWeight: FontWeight.w600,
@@ -336,10 +359,10 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.18),
+          color: color.withValues(alpha: 0.18),
         ),
       ),
       child: Row(
@@ -383,7 +406,12 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRiskHistoryCard(MonitoredPerson currentPerson) {
+  Widget _buildRiskHistoryCard(
+    BuildContext context,
+    MonitoredPerson currentPerson,
+  ) {
+    final t = AppStrings.of(context);
+
     final riskItems = [
       _RiskItem('Önceki Kalp Krizi', currentPerson.previousHeartAttack),
       _RiskItem('Kalp Hastalığı', currentPerson.heartDisease),
@@ -400,20 +428,20 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
 
     if (activeRiskCount >= 4) {
       summaryColor = Colors.red;
-      summaryText = 'Yüksek risk profili';
+      summaryText = isEnglishText(context, 'Yüksek risk profili', 'High risk profile');
     } else if (activeRiskCount >= 2) {
       summaryColor = Colors.orange;
-      summaryText = 'Orta risk profili';
+      summaryText = isEnglishText(context, 'Orta risk profili', 'Moderate risk profile');
     } else if (activeRiskCount == 1) {
       summaryColor = Colors.amber.shade700;
-      summaryText = 'Düşük/orta risk profili';
+      summaryText = isEnglishText(context, 'Düşük/orta risk profili', 'Low/moderate risk profile');
     } else {
       summaryColor = Colors.green;
-      summaryText = 'Belirgin risk faktörü yok';
+      summaryText = t.noClearRiskFactor;
     }
 
     return _buildSectionCard(
-      title: 'Risk Geçmişi',
+      title: t.riskHistory,
       icon: Icons.health_and_safety_outlined,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -422,10 +450,10 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: summaryColor.withOpacity(0.10),
+              color: summaryColor.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: summaryColor.withOpacity(0.25),
+                color: summaryColor.withValues(alpha: 0.25),
               ),
             ),
             child: Row(
@@ -437,7 +465,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    '$summaryText • Seçili risk faktörü: $activeRiskCount',
+                    '$summaryText • ${t.selectedRiskFactorCount(activeRiskCount)}',
                     style: TextStyle(
                       color: summaryColor,
                       fontWeight: FontWeight.w700,
@@ -455,6 +483,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
             children: riskItems
                 .map(
                   (item) => _buildRiskChip(
+                    context: context,
                     label: item.label,
                     value: item.value,
                   ),
@@ -473,7 +502,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               ),
             ),
             child: Text(
-              'İlaçlar: ${currentPerson.medications.isEmpty ? "Belirtilmedi" : currentPerson.medications}',
+              '${t.medicationsPrefix}: ${currentPerson.medications.isEmpty ? t.notSpecified : currentPerson.medications}',
               style: const TextStyle(
                 color: Colors.black87,
                 height: 1.45,
@@ -486,10 +515,22 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
+  String isEnglishText(
+    BuildContext context,
+    String tr,
+    String en,
+  ) {
+    final t = AppStrings.of(context);
+
+    return t.isEnglish ? en : tr;
+  }
+
   Widget _buildRiskChip({
+    required BuildContext context,
     required String label,
     required bool value,
   }) {
+    final t = AppStrings.of(context);
     final bgColor = value ? const Color(0xFFFFEBEE) : const Color(0xFFE8F5E9);
     final textColor =
         value ? const Color(0xFFC62828) : const Color(0xFF2E7D32);
@@ -500,11 +541,11 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: textColor.withOpacity(0.18),
+          color: textColor.withValues(alpha: 0.18),
         ),
       ),
       child: Text(
-        '$label: ${value ? "Evet" : "Hayır"}',
+        '${t.riskFactorLabel(label)}: ${value ? t.yes : t.no}',
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.w700,
@@ -518,14 +559,16 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     BuildContext context,
     MonitoredPerson currentPerson,
   ) {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Demo Simülasyon',
+      title: t.demoSimulation,
       icon: Icons.tune,
       child: Column(
         children: [
-          const Text(
-            'Sunum sırasında fiziksel bileklikten veri geliyormuş gibi farklı kalp ritmi durumları oluşturabilirsiniz.',
-            style: TextStyle(
+          Text(
+            t.demoSimulationMessage,
+            style: const TextStyle(
               color: Colors.black54,
               height: 1.45,
             ),
@@ -544,7 +587,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
                 await _showCriticalAlertDialog(context, currentPerson);
               },
               icon: const Icon(Icons.warning_rounded),
-              label: const Text('Kritik Uyarı Simüle Et'),
+              label: Text(t.simulateCriticalAlert),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
@@ -571,7 +614,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: _buildSmallActionButton(
-                  text: 'Düşük',
+                  text: t.low,
                   icon: Icons.arrow_downward,
                   color: Colors.orange,
                   onPressed: () {
@@ -584,7 +627,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: _buildSmallActionButton(
-                  text: 'Yüksek',
+                  text: t.high,
                   icon: Icons.arrow_upward,
                   color: Colors.deepOrange,
                   onPressed: () {
@@ -618,7 +661,7 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         foregroundColor: color,
         side: BorderSide(
-          color: color.withOpacity(0.55),
+          color: color.withValues(alpha: 0.55),
         ),
         minimumSize: const Size(double.infinity, 44),
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -629,7 +672,9 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmergencyInfoCard() {
+  Widget _buildEmergencyInfoCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 16),
@@ -638,21 +683,21 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
         color: const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFFE53935).withOpacity(0.35),
+          color: const Color(0xFFE53935).withValues(alpha: 0.35),
         ),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.emergency,
             color: Color(0xFFE53935),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Gerçek kullanımda kritik ritim uyarısı alındığında kişi kontrol edilmeli; bilinç kaybı, göğüs ağrısı veya nefes darlığı varsa 112 aranmalıdır.',
-              style: TextStyle(
+              t.realUseEmergencyInfo,
+              style: const TextStyle(
                 color: Color(0xFF8A1C1C),
                 height: 1.45,
                 fontWeight: FontWeight.w600,
@@ -690,12 +735,12 @@ class MonitoredPersonDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _buildHeaderCard(currentPerson),
-                _buildPersonInfoCard(currentPerson),
-                _buildDeviceCard(currentPerson),
-                _buildRiskHistoryCard(currentPerson),
+                _buildHeaderCard(context, currentPerson),
+                _buildPersonInfoCard(context, currentPerson),
+                _buildDeviceCard(context, currentPerson),
+                _buildRiskHistoryCard(context, currentPerson),
                 _buildSimulationCard(context, currentPerson),
-                _buildEmergencyInfoCard(),
+                _buildEmergencyInfoCard(context),
                 const SizedBox(height: 20),
               ],
             ),
