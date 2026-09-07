@@ -30,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
     super.dispose();
   }
 
@@ -68,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
+    final t = AppStrings.of(context);
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -76,6 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final error = await FirebaseAuthService.login(
       email: email,
       password: password,
+      isEnglish: t.isEnglish,
     );
 
     if (!mounted) return;
@@ -86,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
+
       return;
     }
 
@@ -124,6 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
           content: Text(t.resetPasswordEmailRequired),
         ),
       );
+
       return;
     }
 
@@ -133,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(emailError)),
       );
+
       return;
     }
 
@@ -163,6 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final error = await FirebaseAuthService.sendPasswordResetEmail(
       email: email,
+      isEnglish: t.isEnglish,
     );
 
     if (!mounted) return;
@@ -173,6 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
+
       return;
     }
 
@@ -272,12 +280,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed:
-                                _isResetSending ? null : _forgotPassword,
+                            onPressed: _isResetSending ? null : _forgotPassword,
                             child: Text(
-                              _isResetSending
-                                  ? t.sending
-                                  : t.forgotPassword,
+                              _isResetSending ? t.sending : t.forgotPassword,
                             ),
                           ),
                         ),

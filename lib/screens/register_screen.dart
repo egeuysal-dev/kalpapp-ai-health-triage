@@ -28,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+
     super.dispose();
   }
 
@@ -103,6 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final error = await FirebaseAuthService.register(
       email: email,
       password: password,
+      isEnglish: t.isEnglish,
     );
 
     if (!mounted) return;
@@ -113,6 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(error)),
       );
+
       return;
     }
 

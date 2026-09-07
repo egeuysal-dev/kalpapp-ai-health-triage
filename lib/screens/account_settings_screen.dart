@@ -157,7 +157,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     try {
       await FirestoreUserService.deleteAllUserData();
 
-      final error = await FirebaseAuthService.deleteCurrentUser();
+      final error = await FirebaseAuthService.deleteCurrentUser(
+        isEnglish: t.isEnglish,
+      );
 
       if (!mounted) return;
 
@@ -166,7 +168,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           SnackBar(content: Text(error)),
         );
 
-        if (error.contains('tekrar giriş')) {
+        if (FirebaseAuthService.isRecentLoginRequiredMessage(error)) {
           await FirebaseAuthService.signOut();
 
           if (!mounted) return;
