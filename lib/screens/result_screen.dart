@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../core/localization/app_strings.dart';
 import '../models/assessment_result.dart';
 import '../services/firestore_user_service.dart';
 
@@ -44,6 +46,7 @@ class _ResultScreenState extends State<ResultScreen> {
     if (widget.riskLevel == 'Kritik Risk') return Colors.red;
     if (widget.riskLevel == 'Yüksek Risk') return Colors.orange;
     if (widget.riskLevel == 'Orta Risk') return Colors.amber.shade700;
+
     return Colors.green;
   }
 
@@ -51,6 +54,7 @@ class _ResultScreenState extends State<ResultScreen> {
     if (widget.riskLevel == 'Kritik Risk') return Icons.warning_rounded;
     if (widget.riskLevel == 'Yüksek Risk') return Icons.priority_high_rounded;
     if (widget.riskLevel == 'Orta Risk') return Icons.info_outline;
+
     return Icons.check_circle_outline;
   }
 
@@ -89,19 +93,22 @@ class _ResultScreenState extends State<ResultScreen> {
     } catch (_) {
       if (!mounted) return;
 
+      final t = AppStrings.of(context);
+
       setState(() {
         _isSaving = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Sonuç kaydedilirken bir hata oluştu.'),
+        SnackBar(
+          content: Text(t.resultSaveError),
         ),
       );
     }
   }
 
   Future<void> _call112() async {
+    final t = AppStrings.of(context);
     final uri = Uri.parse('tel:112');
 
     try {
@@ -112,10 +119,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
       if (!launched && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              '112 araması başlatılamadı. Emülatörde bu normal olabilir.',
-            ),
+          SnackBar(
+            content: Text(t.call112EmulatorError),
           ),
         );
       }
@@ -123,20 +128,21 @@ class _ResultScreenState extends State<ResultScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Arama başlatılamadı. Gerçek telefonda tekrar deneyin.'),
+        SnackBar(
+          content: Text(t.call112DeviceError),
         ),
       );
     }
   }
 
   Future<void> _callEmergencyContact() async {
+    final t = AppStrings.of(context);
     final phone = widget.emergencyPhone.trim();
 
     if (phone.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Acil kişi telefonu kayıtlı değil.'),
+        SnackBar(
+          content: Text(t.emergencyPhoneMissing),
         ),
       );
       return;
@@ -152,8 +158,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
       if (!launched && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Acil kişi araması başlatılamadı.'),
+          SnackBar(
+            content: Text(t.emergencyContactCallFailed),
           ),
         );
       }
@@ -161,15 +167,20 @@ class _ResultScreenState extends State<ResultScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Acil kişi araması başlatılamadı.'),
+        SnackBar(
+          content: Text(t.emergencyContactCallFailed),
         ),
       );
     }
   }
 
   Widget _buildHeaderResultCard() {
+    final t = AppStrings.of(context);
     final color = _riskColor();
+    final riskLevelText = t.riskLevelText(widget.riskLevel);
+    final actionText = widget.actionLevel.isEmpty
+        ? t.actionLevelNotSpecified
+        : t.actionLevelText(widget.actionLevel);
 
     return Container(
       width: double.infinity,
@@ -178,7 +189,7 @@ class _ResultScreenState extends State<ResultScreen> {
         gradient: LinearGradient(
           colors: [
             color,
-            color.withOpacity(0.72),
+            color.withValues(alpha: 0.72),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -186,7 +197,7 @@ class _ResultScreenState extends State<ResultScreen> {
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.25),
+            color: color.withValues(alpha: 0.25),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -198,7 +209,7 @@ class _ResultScreenState extends State<ResultScreen> {
             width: 86,
             height: 86,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
+              color: Colors.white.withValues(alpha: 0.18),
               borderRadius: BorderRadius.circular(26),
             ),
             child: Icon(
@@ -209,7 +220,7 @@ class _ResultScreenState extends State<ResultScreen> {
           ),
           const SizedBox(height: 18),
           Text(
-            widget.riskLevel,
+            riskLevelText,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white,
@@ -219,9 +230,7 @@ class _ResultScreenState extends State<ResultScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            widget.actionLevel.isEmpty
-                ? 'Aksiyon seviyesi belirtilmedi'
-                : widget.actionLevel,
+            actionText,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white70,
@@ -234,11 +243,11 @@ class _ResultScreenState extends State<ResultScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.16),
+              color: Colors.white.withValues(alpha: 0.16),
               borderRadius: BorderRadius.circular(30),
             ),
             child: Text(
-              'Risk Skoru: ${widget.riskScore}',
+              t.riskScoreValue(widget.riskScore),
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -252,6 +261,8 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildSaveStatusCard() {
+    final t = AppStrings.of(context);
+
     Color color;
     IconData icon;
     String text;
@@ -259,15 +270,15 @@ class _ResultScreenState extends State<ResultScreen> {
     if (_isSaving) {
       color = Colors.blueGrey;
       icon = Icons.sync;
-      text = 'Sonuç kaydediliyor...';
+      text = t.resultSaving;
     } else if (_isSaved) {
       color = Colors.green;
       icon = Icons.cloud_done_outlined;
-      text = 'Sonuç geçmişe kaydedildi.';
+      text = t.resultSaved;
     } else {
       color = Colors.orange;
       icon = Icons.cloud_off_outlined;
-      text = 'Sonuç kaydedilemedi.';
+      text = t.resultNotSaved;
     }
 
     return Container(
@@ -275,10 +286,10 @@ class _ResultScreenState extends State<ResultScreen> {
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.28),
+          color: color.withValues(alpha: 0.28),
         ),
       ),
       child: Row(
@@ -349,23 +360,25 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildMessageCard() {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Sonuç Mesajı',
+      title: t.resultMessageTitle,
       icon: Icons.medical_information_outlined,
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: _riskColor().withOpacity(0.08),
+          color: _riskColor().withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
-            color: _riskColor().withOpacity(0.20),
+            color: _riskColor().withValues(alpha: 0.20),
           ),
         ),
         child: Text(
           widget.resultMessage.isEmpty
-              ? 'Sonuç mesajı bulunmuyor.'
-              : widget.resultMessage,
+              ? t.noResultMessage
+              : t.resultMessageText(widget.resultMessage),
           style: const TextStyle(
             height: 1.5,
             color: Colors.black87,
@@ -377,8 +390,10 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildScoreAndSourceCard() {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Analiz Bilgileri',
+      title: t.analysisInformation,
       icon: Icons.analytics_outlined,
       child: Column(
         children: [
@@ -387,7 +402,7 @@ class _ResultScreenState extends State<ResultScreen> {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.speed,
-                  label: 'Risk Skoru',
+                  label: t.riskScore,
                   value: widget.riskScore.toString(),
                   color: _riskColor(),
                 ),
@@ -396,10 +411,10 @@ class _ResultScreenState extends State<ResultScreen> {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.auto_awesome,
-                  label: 'Analiz Kaynağı',
+                  label: t.analysisSourcePrefix,
                   value: widget.analysisSource.isEmpty
-                      ? 'Belirtilmedi'
-                      : widget.analysisSource,
+                      ? t.notSpecified
+                      : t.analysisSourceDisplay(widget.analysisSource),
                   color: Colors.blue,
                 ),
               ),
@@ -408,10 +423,10 @@ class _ResultScreenState extends State<ResultScreen> {
           const SizedBox(height: 10),
           _buildMetricPill(
             icon: Icons.flag_outlined,
-            label: 'Aksiyon Seviyesi',
+            label: t.actionLevel,
             value: widget.actionLevel.isEmpty
-                ? 'Belirtilmedi'
-                : widget.actionLevel,
+                ? t.notSpecified
+                : t.actionLevelText(widget.actionLevel),
             color: Colors.deepPurple,
           ),
         ],
@@ -428,10 +443,10 @@ class _ResultScreenState extends State<ResultScreen> {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.18),
+          color: color.withValues(alpha: 0.18),
         ),
       ),
       child: Row(
@@ -477,13 +492,13 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildSymptomSummaryCard() {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Semptom Özeti',
+      title: t.symptomSummaryTitle,
       icon: Icons.checklist_rounded,
       child: Text(
-        widget.symptomSummary.isEmpty
-            ? 'Semptom özeti bulunmuyor.'
-            : widget.symptomSummary,
+        widget.symptomSummary.isEmpty ? t.noSymptomSummary : widget.symptomSummary,
         style: const TextStyle(
           height: 1.5,
           color: Colors.black87,
@@ -494,13 +509,15 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildRiskReasonsCard() {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Risk Nedenleri',
+      title: t.riskReasonsTitle,
       icon: Icons.fact_check_outlined,
       child: widget.riskReasons.isEmpty
-          ? const Text(
-              'Risk nedeni belirtilmedi.',
-              style: TextStyle(
+          ? Text(
+              t.noRiskReason,
+              style: const TextStyle(
                 color: Colors.black54,
                 height: 1.5,
               ),
@@ -516,6 +533,8 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildReasonTile(String reason) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(bottom: 9),
@@ -537,7 +556,7 @@ class _ResultScreenState extends State<ResultScreen> {
           const SizedBox(width: 6),
           Expanded(
             child: Text(
-              reason,
+              t.riskReasonText(reason),
               style: const TextStyle(
                 height: 1.45,
                 color: Colors.black87,
@@ -551,10 +570,11 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildEmergencyActionsCard() {
+    final t = AppStrings.of(context);
     final hasEmergencyContact = widget.emergencyPhone.trim().isNotEmpty;
 
     return _buildSectionCard(
-      title: 'Acil Durum İşlemleri',
+      title: t.emergencyActions,
       icon: Icons.emergency,
       child: Column(
         children: [
@@ -565,12 +585,12 @@ class _ResultScreenState extends State<ResultScreen> {
               color: const Color(0xFFFFEBEE),
               borderRadius: BorderRadius.circular(18),
               border: Border.all(
-                color: const Color(0xFFE53935).withOpacity(0.28),
+                color: const Color(0xFFE53935).withValues(alpha: 0.28),
               ),
             ),
-            child: const Text(
-              'Ciddi belirti varsa sonucu yorumlamakla vakit kaybetmeden 112 aranmalıdır. Bu uygulama tanı koymaz ve acil sağlık hizmetlerinin yerine geçmez.',
-              style: TextStyle(
+            child: Text(
+              t.emergencyDisclaimer,
+              style: const TextStyle(
                 color: Color(0xFF8A1C1C),
                 height: 1.45,
                 fontWeight: FontWeight.w700,
@@ -584,7 +604,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 child: ElevatedButton.icon(
                   onPressed: _call112,
                   icon: const Icon(Icons.call),
-                  label: const Text('112’yi Ara'),
+                  label: Text(t.call112),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFE53935),
                     foregroundColor: Colors.white,
@@ -600,7 +620,7 @@ class _ResultScreenState extends State<ResultScreen> {
                 child: OutlinedButton.icon(
                   onPressed: hasEmergencyContact ? _callEmergencyContact : null,
                   icon: const Icon(Icons.contact_phone_outlined),
-                  label: const Text('Acil Kişi'),
+                  label: Text(t.emergencyContact),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 52),
                     shape: RoundedRectangleBorder(
@@ -614,7 +634,7 @@ class _ResultScreenState extends State<ResultScreen> {
           if (hasEmergencyContact) ...[
             const SizedBox(height: 10),
             Text(
-              'Acil kişi telefonu: ${widget.emergencyPhone}',
+              '${t.emergencyContactPhone}: ${widget.emergencyPhone}',
               style: const TextStyle(
                 color: Colors.black54,
                 fontWeight: FontWeight.w600,
@@ -627,6 +647,8 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   Widget _buildBottomActions() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 18, bottom: 24),
@@ -636,7 +658,7 @@ class _ResultScreenState extends State<ResultScreen> {
             child: OutlinedButton.icon(
               onPressed: () => Navigator.pop(context),
               icon: const Icon(Icons.arrow_back),
-              label: const Text('Geri Dön'),
+              label: Text(t.goBack),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 52),
                 shape: RoundedRectangleBorder(
@@ -650,7 +672,7 @@ class _ResultScreenState extends State<ResultScreen> {
             child: ElevatedButton.icon(
               onPressed: _saveResult,
               icon: const Icon(Icons.save_outlined),
-              label: const Text('Kaydet'),
+              label: Text(t.save),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _riskColor(),
                 foregroundColor: Colors.white,
@@ -668,13 +690,15 @@ class _ResultScreenState extends State<ResultScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     final showEmergencyActions =
         widget.riskLevel == 'Kritik Risk' || widget.riskLevel == 'Yüksek Risk';
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Değerlendirme Sonucu'),
+        title: Text(t.resultScreenTitle),
         elevation: 0,
       ),
       body: SingleChildScrollView(

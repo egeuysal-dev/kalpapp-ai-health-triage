@@ -188,4 +188,512 @@ class AppStrings {
   String get accountDeleteError => isEnglish
       ? 'An error occurred while deleting the account.'
       : 'Hesap silinirken bir hata oluştu.';
+
+        // Home Screen
+  String get aboutApp => isEnglish ? 'About Application' : 'Uygulama Hakkında';
+
+  String get quickActions => isEnglish ? 'Quick Actions' : 'Hızlı İşlemler';
+
+  String get heartAssessment =>
+      isEnglish ? 'Heart Assessment' : 'Kalp Değerlendirme';
+
+  String get symptomAnalysis =>
+      isEnglish ? 'Symptom analysis' : 'Semptom analizi';
+
+  String get monitoredPeople =>
+      isEnglish ? 'Monitored People' : 'Takip Ettiklerim';
+
+  String get relativesAndWearable =>
+      isEnglish ? 'Family and wearable' : 'Yakın ve bileklik';
+
+  String get recordsAndAlerts =>
+      isEnglish ? 'Records and Alerts' : 'Kayıtlar ve Uyarılar';
+
+  String get lastAssessment =>
+      isEnglish ? 'Last Assessment' : 'Son Değerlendirme';
+
+  String get lastRiskResult =>
+      isEnglish ? 'Last risk result' : 'Son risk sonucu';
+
+  String get history => isEnglish ? 'History' : 'Geçmiş';
+
+  String get riskRecords => isEnglish ? 'Risk records' : 'Risk kayıtları';
+
+  String get braceletAlerts =>
+      isEnglish ? 'Wearable Alerts' : 'Bileklik Uyarıları';
+
+  String get alertHistory => isEnglish ? 'Alert history' : 'Uyarı geçmişi';
+
+  String get braceletMonitoring =>
+      isEnglish ? 'Wearable Monitoring' : 'Bileklik Takibi';
+
+  String get liveDemoStatus =>
+      isEnglish ? 'Live/demo status' : 'Canlı/demo durum';
+
+  String get account => isEnglish ? 'Account' : 'Hesap';
+
+  String get editProfile => isEnglish ? 'Edit Profile' : 'Profili Düzenle';
+
+  String get updateInformation =>
+      isEnglish ? 'Update information' : 'Bilgileri güncelle';
+
+  String get profileSummary =>
+      isEnglish ? 'Profile Summary' : 'Profil Özeti';
+
+  String get savedInformation =>
+      isEnglish ? 'Saved information' : 'Kayıtlı bilgiler';
+
+  String get accountSecurity =>
+      isEnglish ? 'Account Security' : 'Hesap Güvenliği';
+
+  String get dataAndSession =>
+      isEnglish ? 'Data and session' : 'Veri ve oturum';
+
+  String get closeSession => isEnglish ? 'Close session' : 'Oturumu kapat';
+
+  String get information => isEnglish ? 'Information' : 'Bilgilendirme';
+
+  String get privacyAndKvkk =>
+      isEnglish ? 'Privacy and Data Policy' : 'Gizlilik ve KVKK';
+
+  String get dataPolicy => isEnglish ? 'Data policy' : 'Veri politikası';
+
+  String get purposeAndVersion =>
+      isEnglish ? 'Purpose and version' : 'Amaç ve sürüm';
+
+  String welcomeUser(String fullName) {
+    return isEnglish ? 'Welcome,\n$fullName' : 'Hoş geldiniz,\n$fullName';
+  }
+
+  String ageGender(int age, String gender) {
+    return isEnglish ? 'Age: $age • $gender' : 'Yaş: $age • $gender';
+  }
+
+  String genderText(String gender) {
+    if (!isEnglish) return gender;
+
+    final normalized = gender.trim().toLowerCase();
+
+    if (normalized == 'erkek') return 'Male';
+    if (normalized == 'kadın' || normalized == 'kadin') return 'Female';
+
+    return gender;
+  }
+
+  String get activeBraceletAlert =>
+      isEnglish ? 'Active Wearable Alert' : 'Aktif Bileklik Uyarısı';
+
+  String braceletAlertDetected(String fullName, String status) {
+    return isEnglish
+        ? '$status was detected for $fullName.'
+        : '$fullName için ${status.toLowerCase()} algılandı.';
+  }
+
+  String get heartRate => isEnglish ? 'Heart rate' : 'Kalp ritmi';
+
+  String get deviceId => isEnglish ? 'Device ID' : 'Cihaz ID';
+
+  String get lastMeasurement =>
+      isEnglish ? 'Last measurement' : 'Son ölçüm';
+
+  String get openDetail => isEnglish ? 'Open Detail' : 'Detayı Aç';
+
+  String get normalize => isEnglish ? 'Normalize' : 'Normalleştir';
+
+  String get lastAssessmentLoading => isEnglish
+      ? 'Last assessment is loading...'
+      : 'Son değerlendirme yükleniyor...';
+
+  String get noAssessmentYet => isEnglish
+      ? 'No assessment has been completed yet. The first result will appear here.'
+      : 'Henüz değerlendirme yapılmadı. İlk sonuç burada görünecek.';
+
+  String scoreAndDate(Object score, String date) {
+    return isEnglish ? 'Score: $score • $date' : 'Skor: $score • $date';
+  }
+
+  String get noSavedAssessment => isEnglish
+      ? 'There is no saved assessment yet.'
+      : 'Henüz kayıtlı değerlendirme yok.';
+
+  String riskLevelText(String level) {
+    if (!isEnglish) return level;
+
+    switch (level) {
+      case 'Kritik Risk':
+        return 'Critical Risk';
+      case 'Yüksek Risk':
+        return 'High Risk';
+      case 'Orta Risk':
+        return 'Moderate Risk';
+      case 'Düşük Risk':
+        return 'Low Risk';
+      default:
+        return level;
+    }
+  }
+
+  String braceletStatusText(String status) {
+    if (!isEnglish) return status;
+
+    switch (status) {
+      case 'Kritik uyarı':
+        return 'Critical alert';
+      case 'Düşük kalp ritmi uyarısı':
+        return 'Low heart rate alert';
+      case 'Yüksek kalp ritmi uyarısı':
+        return 'High heart rate alert';
+      case 'Normal':
+        return 'Normal';
+      default:
+        return status;
+    }
+  }
+
+    // Symptom Screen
+  String get symptomAssessmentTitle =>
+      isEnglish ? 'Symptom Assessment' : 'Semptom Değerlendirme';
+
+  String get symptomAssessmentSubtitle => isEnglish
+      ? 'Write your symptoms, speak them, or select them manually.'
+      : 'Semptomlarınızı yazın, konuşarak aktarın veya manuel olarak seçin.';
+
+  String get seriousSymptomWarningTitle =>
+      isEnglish ? 'Serious Symptom Warning' : 'Ciddi Belirti Uyarısı';
+
+  String get seriousSymptomWarningMessage => isEnglish
+      ? 'The symptoms you selected may be serious. In case of chest pain, shortness of breath, fainting feeling, cold sweating, or radiating pain, call emergency services without waiting for the application result.'
+      : 'Seçtiğiniz belirtiler ciddi olabilir. Göğüs ağrısı, nefes darlığı, bayılma hissi, soğuk terleme veya yayılan ağrı durumunda uygulama sonucunu beklemeden 112 aranması önerilir.';
+
+  String get emergencyWarningText => isEnglish
+      ? 'If you have severe chest pain, shortness of breath, fainting feeling, cold sweating, or pain spreading to the arm/jaw, call emergency services without waiting for the application result.'
+      : 'Şiddetli göğüs ağrısı, nefes darlığı, bayılma hissi, soğuk terleme veya kola/çeneye yayılan ağrı varsa uygulama sonucunu beklemeden 112’yi arayın.';
+
+  String get call112 => isEnglish ? 'Call 112' : '112’yi Ara';
+
+  String get viewResult => isEnglish ? 'View Result' : 'Sonucu Gör';
+
+  String get writeOrSpeak => isEnglish ? 'Write or Speak' : 'Yaz veya Konuş';
+
+  String get symptomDescription =>
+      isEnglish ? 'Symptom description' : 'Semptom açıklaması';
+
+  String get symptomInputHint => isEnglish
+      ? 'Example: I have had chest pressure for 20 minutes, it spreads to my left arm and I feel short of breath.'
+      : 'Örn: 20 dakikadır göğsümde baskı var, sol koluma vuruyor ve nefesim daralıyor';
+
+  String get speak => isEnglish ? 'Speak' : 'Konuş';
+
+  String get stopListening => isEnglish ? 'Stop' : 'Durdur';
+
+  String get clearSymptomInput => isEnglish ? 'Clear' : 'Temizle';
+
+  String get analyzeWithAi => isEnglish ? 'Analyze with AI' : 'AI ile Analiz Et';
+
+  String get analyzingWithAi =>
+      isEnglish ? 'Analyzing...' : 'Analiz Ediliyor...';
+
+  String get symptomOptionsTitle =>
+      isEnglish ? 'Symptom Options' : 'Semptom Seçenekleri';
+
+  String get severityAndDuration =>
+      isEnglish ? 'Severity and Duration' : 'Şiddet ve Süre';
+
+  String get symptomDurationTitle =>
+      isEnglish ? 'Symptom Duration' : 'Semptom Süresi';
+
+  String get painSeverityTitle =>
+      isEnglish ? 'Pain Severity' : 'Ağrı Şiddeti';
+
+  String minutesValue(int minutes) {
+    return isEnglish ? '$minutes minutes' : '$minutes dakika';
+  }
+
+  String painSeverityValue(int value) {
+    return '$value / 10';
+  }
+
+  String get chestPainPressure =>
+      isEnglish ? 'Chest pain / pressure' : 'Göğüs ağrısı / baskı';
+
+  String get radiatingPain =>
+      isEnglish ? 'Pain spreading to arm/jaw' : 'Kola/çeneye yayılan ağrı';
+
+  String get shortnessOfBreathText =>
+      isEnglish ? 'Shortness of breath' : 'Nefes darlığı';
+
+  String get coldSweatingText =>
+      isEnglish ? 'Cold sweating' : 'Soğuk terleme';
+
+  String get nauseaText => isEnglish ? 'Nausea' : 'Mide bulantısı';
+
+  String get dizzinessText => isEnglish ? 'Dizziness' : 'Baş dönmesi';
+
+  String get faintingFeelingText =>
+      isEnglish ? 'Fainting feeling' : 'Bayılma hissi';
+
+  String get noSymptomSelected =>
+      isEnglish ? 'No clear symptom selected' : 'Belirgin semptom seçilmedi';
+
+  String get pleaseEnterSymptomText => isEnglish
+      ? 'Please write or speak your symptom first.'
+      : 'Lütfen önce semptomunuzu yazın veya konuşun.';
+
+  String get manualSelection =>
+      isEnglish ? 'Manual selection' : 'Manuel seçim';
+
+  String get backendAiAnalysis =>
+      isEnglish ? 'Backend AI analysis' : 'Backend AI analizi';
+
+  String get localFallbackAnalysis =>
+      isEnglish ? 'Local fallback analysis' : 'Yerel yedek analiz';
+
+  String analysisSourceDisplay(String source) {
+    if (source == 'Backend AI analizi') return backendAiAnalysis;
+    if (source == 'Yerel yedek analiz') return localFallbackAnalysis;
+    if (source == 'Manuel seçim') return manualSelection;
+
+    return source;
+  }
+
+  String get analysisSourcePrefix =>
+      isEnglish ? 'Analysis source' : 'Analiz kaynağı';
+
+  String get micUnavailablePermission => isEnglish
+      ? 'Microphone is unavailable. Please check microphone permission.'
+      : 'Mikrofon kullanılamıyor. Lütfen mikrofon iznini kontrol edin.';
+
+  String get noSpeechDetectedShort =>
+      isEnglish ? 'No speech was detected. Please try again.' : 'Ses algılanamadı. Tekrar deneyin.';
+
+  String get noSpeechDetectedLong => isEnglish
+      ? 'No speech was detected. Please try again and start speaking right after pressing the button.'
+      : 'Ses algılanamadı. Tekrar deneyin ve butona bastıktan hemen sonra konuşun.';
+
+  String microphoneError(String error) {
+    return isEnglish ? 'Microphone error: $error' : 'Mikrofon hatası: $error';
+  }
+
+  String get call112EmulatorError => isEnglish
+      ? '112 call could not be started. This may be normal on an emulator.'
+      : '112 araması başlatılamadı. Emülatörde bu normal olabilir.';
+
+  String get call112DeviceError => isEnglish
+      ? 'The call could not be started. Please try again on a real phone.'
+      : 'Arama başlatılamadı. Gerçek telefonda tekrar deneyin.';
+
+  String get backendUnavailableFallback => isEnglish
+      ? 'Backend could not be reached. Continued with local analysis.'
+      : 'Backend’e ulaşılamadı. Yerel analiz ile devam edildi.';
+
+  String get symptomTextAnalyzed =>
+      isEnglish ? 'Symptom text has been analyzed.' : 'Semptom metni analiz edildi.';
+
+  String analysisError(Object error) {
+    return isEnglish
+        ? 'An error occurred during analysis: $error'
+        : 'Analiz sırasında hata oluştu: $error';
+  }
+
+  String speechStatusDisplay(String status) {
+    if (!isEnglish) return status;
+
+    if (status == 'Mikrofon hazırlanıyor...') {
+      return 'Preparing microphone...';
+    }
+
+    if (status == 'Mikrofon hazır') {
+      return 'Microphone ready';
+    }
+
+    if (status == 'Dinleniyor...') {
+      return 'Listening...';
+    }
+
+    if (status == 'Dinleme durdu') {
+      return 'Listening stopped';
+    }
+
+    if (status == 'Konuşma tanıma bu cihazda kullanılamıyor') {
+      return 'Speech recognition is not available on this device';
+    }
+
+    if (status == 'Konuşma tanıma başlatılamadı') {
+      return 'Speech recognition could not be started';
+    }
+
+    if (status.startsWith('Mikrofon hatası:')) {
+      final detail = status.replaceFirst('Mikrofon hatası:', '').trim();
+      return 'Microphone error: $detail';
+    }
+
+    return status;
+  }
+
+    // Result Screen
+  String get resultScreenTitle =>
+      isEnglish ? 'Assessment Result' : 'Değerlendirme Sonucu';
+
+  String get resultMessageTitle =>
+      isEnglish ? 'Result Message' : 'Sonuç Mesajı';
+
+  String get noResultMessage =>
+      isEnglish ? 'No result message found.' : 'Sonuç mesajı bulunmuyor.';
+
+  String get analysisInformation =>
+      isEnglish ? 'Analysis Information' : 'Analiz Bilgileri';
+
+  String get riskScore => isEnglish ? 'Risk Score' : 'Risk Skoru';
+
+  String get notSpecified => isEnglish ? 'Not specified' : 'Belirtilmedi';
+
+  String get actionLevel => isEnglish ? 'Action Level' : 'Aksiyon Seviyesi';
+
+  String get symptomSummaryTitle =>
+      isEnglish ? 'Symptom Summary' : 'Semptom Özeti';
+
+  String get noSymptomSummary =>
+      isEnglish ? 'No symptom summary found.' : 'Semptom özeti bulunmuyor.';
+
+  String get riskReasonsTitle =>
+      isEnglish ? 'Risk Reasons' : 'Risk Nedenleri';
+
+  String get noRiskReason =>
+      isEnglish ? 'No risk reason specified.' : 'Risk nedeni belirtilmedi.';
+
+  String get emergencyActions =>
+      isEnglish ? 'Emergency Actions' : 'Acil Durum İşlemleri';
+
+  String get emergencyDisclaimer => isEnglish
+      ? 'If serious symptoms are present, call 112 without spending time interpreting the result. This application does not provide diagnosis and does not replace emergency medical services.'
+      : 'Ciddi belirti varsa sonucu yorumlamakla vakit kaybetmeden 112 aranmalıdır. Bu uygulama tanı koymaz ve acil sağlık hizmetlerinin yerine geçmez.';
+
+  String get emergencyContact =>
+      isEnglish ? 'Emergency Contact' : 'Acil Kişi';
+
+  String get emergencyContactPhone =>
+      isEnglish ? 'Emergency contact phone' : 'Acil kişi telefonu';
+
+  String get emergencyPhoneMissing => isEnglish
+      ? 'Emergency contact phone is not saved.'
+      : 'Acil kişi telefonu kayıtlı değil.';
+
+  String get emergencyContactCallFailed => isEnglish
+      ? 'Emergency contact call could not be started.'
+      : 'Acil kişi araması başlatılamadı.';
+
+  String get goBack => isEnglish ? 'Go Back' : 'Geri Dön';
+
+  String get save => isEnglish ? 'Save' : 'Kaydet';
+
+  String get resultSaving =>
+      isEnglish ? 'Saving result...' : 'Sonuç kaydediliyor...';
+
+  String get resultSaved =>
+      isEnglish ? 'Result saved to history.' : 'Sonuç geçmişe kaydedildi.';
+
+  String get resultNotSaved =>
+      isEnglish ? 'Result could not be saved.' : 'Sonuç kaydedilemedi.';
+
+  String get resultSaveError => isEnglish
+      ? 'An error occurred while saving the result.'
+      : 'Sonuç kaydedilirken bir hata oluştu.';
+
+  String get actionLevelNotSpecified => isEnglish
+      ? 'Action level not specified'
+      : 'Aksiyon seviyesi belirtilmedi';
+
+  String riskScoreValue(int score) {
+    return isEnglish ? 'Risk Score: $score' : 'Risk Skoru: $score';
+  }
+
+  String resultMessageText(String message) {
+    if (!isEnglish) return message;
+
+    switch (message) {
+      case 'Belirtileriniz ciddi olabilir. Beklemeden 112 aranması önerilir.':
+        return 'Your symptoms may be serious. Calling 112 immediately is recommended.';
+      case 'Kalp krizi ile uyumlu olabilecek belirtiler mevcut. Acil tıbbi yardım alınması önerilir.':
+        return 'Some symptoms may be consistent with a heart attack. Urgent medical assistance is recommended.';
+      case 'Önemli belirtiler mevcut. Kısa sürede tıbbi değerlendirme önerilir.':
+        return 'Important symptoms are present. Medical evaluation soon is recommended.';
+      case 'Mevcut belirtiler düşük riskli görünüyor. Şikayetler sürerse sağlık kuruluşuna başvurun.':
+        return 'Current symptoms appear to be low risk. If complaints continue, contact a healthcare facility.';
+      default:
+        return message;
+    }
+  }
+
+  String actionLevelText(String level) {
+    if (!isEnglish) return level;
+
+    switch (level) {
+      case 'Acil Eylem Gerekli':
+        return 'Immediate Action Required';
+      case 'Bugün Acil Değerlendirme':
+        return 'Urgent Evaluation Today';
+      case 'Yakın Sürede Doktor Görüşü':
+        return 'Doctor Consultation Soon';
+      case 'Takip ve Gözlem':
+        return 'Follow-up and Observation';
+      default:
+        return level;
+    }
+  }
+
+  String riskReasonText(String reason) {
+    if (!isEnglish) return reason;
+
+    switch (reason) {
+      case 'Göğüs ağrısı/baskı bildirildi.':
+        return 'Chest pain/pressure was reported.';
+      case 'Ağrının kola, sırta, boyna veya çeneye yayılması bildirildi.':
+        return 'Pain spreading to the arm, back, neck, or jaw was reported.';
+      case 'Nefes darlığı bildirildi.':
+        return 'Shortness of breath was reported.';
+      case 'Soğuk terleme bildirildi.':
+        return 'Cold sweating was reported.';
+      case 'Mide bulantısı bildirildi.':
+        return 'Nausea was reported.';
+      case 'Baş dönmesi bildirildi.':
+        return 'Dizziness was reported.';
+      case 'Bayılma hissi bildirildi.':
+        return 'Fainting feeling was reported.';
+      case 'Semptom süresi 30 dakika veya daha fazla.':
+        return 'Symptom duration is 30 minutes or more.';
+      case 'Semptom süresi 15 dakikadan fazla.':
+        return 'Symptom duration is more than 15 minutes.';
+      case 'Semptomlar birkaç dakikadır sürüyor.':
+        return 'Symptoms have been continuing for several minutes.';
+      case 'Ağrı şiddeti çok yüksek.':
+        return 'Pain severity is very high.';
+      case 'Ağrı şiddeti belirgin düzeyde.':
+        return 'Pain severity is significant.';
+      case 'İleri yaş ek risk oluşturuyor.':
+        return 'Advanced age creates additional risk.';
+      case '50 yaş üzeri olmak riski artırıyor.':
+        return 'Being over 50 increases the risk.';
+      case 'Daha önce kalp krizi öyküsü var.':
+        return 'There is a previous heart attack history.';
+      case 'Kalp hastalığı öyküsü var.':
+        return 'There is a history of heart disease.';
+      case 'Hipertansiyon öyküsü var.':
+        return 'There is a history of hypertension.';
+      case 'Diyabet öyküsü var.':
+        return 'There is a history of diabetes.';
+      case 'Yüksek kolesterol öyküsü var.':
+        return 'There is a history of high cholesterol.';
+      case 'Sigara kullanımı bildirildi.':
+        return 'Smoking was reported.';
+      case 'Göğüs ağrısı + yayılan ağrı + nefes darlığı kritik kombinasyon olarak değerlendirildi.':
+        return 'Chest pain + radiating pain + shortness of breath was evaluated as a critical combination.';
+      case 'Göğüs ağrısı + soğuk terleme + mide bulantısı birlikte görüldü.':
+        return 'Chest pain + cold sweating + nausea were seen together.';
+      case 'Bayılma hissi ve nefes darlığı birlikte bildirildi.':
+        return 'Fainting feeling and shortness of breath were reported together.';
+      default:
+        return reason;
+    }
+  }
+
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:url_launcher/url_launcher.dart';
+
+import '../core/localization/app_strings.dart';
 import '../models/risk_input.dart';
 import '../models/user_profile.dart';
 import '../services/ai/ai_service_factory.dart';
@@ -11,15 +13,24 @@ import 'result_screen.dart';
 class SymptomScreen extends StatefulWidget {
   final UserProfile profile;
 
-  const SymptomScreen({super.key, required this.profile});
+  const SymptomScreen({
+    super.key,
+    required this.profile,
+  });
 
   @override
   State<SymptomScreen> createState() => _SymptomScreenState();
 }
 
 class _SymptomScreenState extends State<SymptomScreen> {
+  static const String _manualSource = 'Manuel seçim';
+  static const String _backendSource = 'Backend AI analizi';
+  static const String _fallbackSource = 'Yerel yedek analiz';
+
   late final _aiService = AIServiceFactory.create();
   final stt.SpeechToText _speech = stt.SpeechToText();
+
+  final TextEditingController _freeTextController = TextEditingController();
 
   bool chestPain = false;
   bool painRadiation = false;
@@ -32,14 +43,12 @@ class _SymptomScreenState extends State<SymptomScreen> {
   double symptomDuration = 5;
   double painSeverity = 1;
 
-  final TextEditingController _freeTextController = TextEditingController();
-
   bool _isAnalyzing = false;
   bool _isListening = false;
   bool _speechAvailable = false;
 
   String _aiSummary = '';
-  String _analysisSource = 'Manuel seçim';
+  String _analysisSource = _manualSource;
   String _speechStatus = 'Mikrofon hazırlanıyor...';
 
   @override
@@ -76,6 +85,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
         onError: (error) {
           if (!mounted) return;
 
+          final t = AppStrings.of(context);
+
           final readableMessage = error.errorMsg == 'error_speech_timeout'
               ? 'Ses algılanamadı. Tekrar deneyin ve butona bastıktan hemen sonra konuşun.'
               : 'Mikrofon hatası: ${error.errorMsg}';
@@ -89,8 +100,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
             SnackBar(
               content: Text(
                 error.errorMsg == 'error_speech_timeout'
-                    ? 'Ses algılanamadı. Tekrar deneyin.'
-                    : 'Mikrofon hatası: ${error.errorMsg}',
+                    ? t.noSpeechDetectedShort
+                    : t.microphoneError(error.errorMsg),
               ),
             ),
           );
@@ -116,6 +127,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Future<void> _toggleListening() async {
+    final t = AppStrings.of(context);
+
     if (_isListening) {
       await _speech.stop();
 
@@ -136,10 +149,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
         if (!mounted) return;
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Mikrofon kullanılamıyor. Lütfen mikrofon iznini kontrol edin.',
-            ),
+          SnackBar(
+            content: Text(t.micUnavailablePermission),
           ),
         );
         return;
@@ -152,7 +163,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
     });
 
     await _speech.listen(
-      localeId: 'tr_TR',
+      localeId: t.isEnglish ? 'en_US' : 'tr_TR',
       listenMode: stt.ListenMode.dictation,
       listenFor: const Duration(seconds: 45),
       pauseFor: const Duration(seconds: 8),
@@ -166,7 +177,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
           _freeTextController.selection = TextSelection.fromPosition(
             TextPosition(offset: _freeTextController.text.length),
           );
-          _analysisSource = 'Manuel seçim';
+          _analysisSource = _manualSource;
         });
       },
     );
@@ -176,12 +187,13 @@ class _SymptomScreenState extends State<SymptomScreen> {
     setState(() {
       _freeTextController.clear();
       _aiSummary = '';
-      _analysisSource = 'Manuel seçim';
+      _analysisSource = _manualSource;
       _speechStatus = _speechAvailable ? 'Mikrofon hazır' : _speechStatus;
     });
   }
 
   Future<void> _call112() async {
+    final t = AppStrings.of(context);
     final uri = Uri.parse('tel:112');
 
     try {
@@ -192,10 +204,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
 
       if (!launched && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              '112 araması başlatılamadı. Emülatörde bu normal olabilir.',
-            ),
+          SnackBar(
+            content: Text(t.call112EmulatorError),
           ),
         );
       }
@@ -203,10 +213,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Arama başlatılamadı. Gerçek telefonda tekrar deneyin.',
-          ),
+        SnackBar(
+          content: Text(t.call112DeviceError),
         ),
       );
     }
@@ -217,13 +225,14 @@ class _SymptomScreenState extends State<SymptomScreen> {
         (painRadiation || shortnessOfBreath || coldSweating || faintingFeeling);
 
     final severeSymptoms = painSeverity >= 7 || symptomDuration >= 15;
-
     final breathingOrFaintingPattern = shortnessOfBreath && faintingFeeling;
 
     return (strongChestPattern && severeSymptoms) || breathingOrFaintingPattern;
   }
 
   Future<bool> _showCriticalWarningDialog() async {
+    final t = AppStrings.of(context);
+
     final result = await showDialog<bool>(
       context: context,
       builder: (_) => Dialog(
@@ -254,18 +263,18 @@ class _SymptomScreenState extends State<SymptomScreen> {
                     topRight: Radius.circular(28),
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(
+                    const Icon(
                       Icons.warning_rounded,
                       color: Colors.white,
                       size: 34,
                     ),
-                    SizedBox(width: 12),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Text(
-                        'Ciddi Belirti Uyarısı',
-                        style: TextStyle(
+                        t.seriousSymptomWarningTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -286,12 +295,12 @@ class _SymptomScreenState extends State<SymptomScreen> {
                         color: const Color(0xFFFFEBEE),
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(
-                          color: const Color(0xFFE53935).withOpacity(0.30),
+                          color: const Color(0xFFE53935).withValues(alpha: 0.30),
                         ),
                       ),
-                      child: const Text(
-                        'Seçtiğiniz belirtiler ciddi olabilir. Göğüs ağrısı, nefes darlığı, bayılma hissi, soğuk terleme veya yayılan ağrı durumunda uygulama sonucunu beklemeden 112 aranması önerilir.',
-                        style: TextStyle(
+                      child: Text(
+                        t.seriousSymptomWarningMessage,
+                        style: const TextStyle(
                           color: Color(0xFF8A1C1C),
                           height: 1.45,
                           fontWeight: FontWeight.w600,
@@ -310,7 +319,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
                                 borderRadius: BorderRadius.circular(16),
                               ),
                             ),
-                            child: const Text('Sonucu Gör'),
+                            child: Text(t.viewResult),
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -321,7 +330,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
                               await _call112();
                             },
                             icon: const Icon(Icons.call),
-                            label: const Text('112’yi Ara'),
+                            label: Text(t.call112),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFE53935),
                               foregroundColor: Colors.white,
@@ -347,30 +356,32 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   String _buildSymptomSummary() {
+    final t = AppStrings.of(context);
     final List<String> symptoms = [];
 
-    if (chestPain) symptoms.add('Göğüs ağrısı');
-    if (painRadiation) symptoms.add('Yayılan ağrı');
-    if (shortnessOfBreath) symptoms.add('Nefes darlığı');
-    if (coldSweating) symptoms.add('Soğuk terleme');
-    if (nausea) symptoms.add('Mide bulantısı');
-    if (dizziness) symptoms.add('Baş dönmesi');
-    if (faintingFeeling) symptoms.add('Bayılma hissi');
+    if (chestPain) symptoms.add(t.chestPainPressure);
+    if (painRadiation) symptoms.add(t.radiatingPain);
+    if (shortnessOfBreath) symptoms.add(t.shortnessOfBreathText);
+    if (coldSweating) symptoms.add(t.coldSweatingText);
+    if (nausea) symptoms.add(t.nauseaText);
+    if (dizziness) symptoms.add(t.dizzinessText);
+    if (faintingFeeling) symptoms.add(t.faintingFeelingText);
 
     if (symptoms.isEmpty) {
-      return 'Belirgin semptom seçilmedi';
+      return t.noSymptomSelected;
     }
 
     return symptoms.join(', ');
   }
 
   Future<void> _analyzeWithAI() async {
+    final t = AppStrings.of(context);
     final text = _freeTextController.text.trim();
 
     if (text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen önce semptomunuzu yazın veya konuşun.'),
+        SnackBar(
+          content: Text(t.pleaseEnterSymptomText),
         ),
       );
       return;
@@ -405,17 +416,14 @@ class _SymptomScreenState extends State<SymptomScreen> {
             result.durationMinutesEstimate.clamp(0, 60).toDouble();
         painSeverity = result.painSeverityEstimate.clamp(1, 10).toDouble();
         _aiSummary = result.summary;
-        _analysisSource =
-            usedFallback ? 'Yerel yedek analiz' : 'Backend AI analizi';
+        _analysisSource = usedFallback ? _fallbackSource : _backendSource;
         _isAnalyzing = false;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            usedFallback
-                ? 'Backend’e ulaşılamadı. Yerel analiz ile devam edildi.'
-                : 'Semptom metni analiz edildi.',
+            usedFallback ? t.backendUnavailableFallback : t.symptomTextAnalyzed,
           ),
         ),
       );
@@ -428,7 +436,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Analiz sırasında hata oluştu: $e'),
+          content: Text(t.analysisError(e)),
         ),
       );
     }
@@ -479,6 +487,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildHeaderCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -497,31 +507,31 @@ class _SymptomScreenState extends State<SymptomScreen> {
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.emergency,
             color: Colors.white,
             size: 42,
           ),
-          SizedBox(width: 14),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Semptom Değerlendirme',
-                  style: TextStyle(
+                  t.symptomAssessmentTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'Semptomlarınızı yazın, konuşarak aktarın veya manuel olarak seçin.',
-                  style: TextStyle(
+                  t.symptomAssessmentSubtitle,
+                  style: const TextStyle(
                     color: Colors.white70,
                     height: 1.4,
                   ),
@@ -535,6 +545,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildEmergencyWarningCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 16),
@@ -543,24 +555,24 @@ class _SymptomScreenState extends State<SymptomScreen> {
         color: const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFFE53935).withOpacity(0.35),
+          color: const Color(0xFFE53935).withValues(alpha: 0.35),
         ),
       ),
       child: Column(
         children: [
-          const Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
+              const Icon(
                 Icons.warning_amber_rounded,
                 color: Color(0xFFE53935),
                 size: 30,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Şiddetli göğüs ağrısı, nefes darlığı, bayılma hissi, soğuk terleme veya kola/çeneye yayılan ağrı varsa uygulama sonucunu beklemeden 112’yi arayın.',
-                  style: TextStyle(
+                  t.emergencyWarningText,
+                  style: const TextStyle(
                     color: Color(0xFF8A1C1C),
                     fontSize: 14,
                     height: 1.45,
@@ -576,7 +588,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
             child: ElevatedButton.icon(
               onPressed: _call112,
               icon: const Icon(Icons.call),
-              label: const Text('112’yi Ara'),
+              label: Text(t.call112),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFE53935),
                 foregroundColor: Colors.white,
@@ -642,10 +654,11 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildSpeechInputSection() {
+    final t = AppStrings.of(context);
     final hasText = _freeTextController.text.trim().isNotEmpty;
 
     return _buildSectionCard(
-      title: 'Yaz veya Konuş',
+      title: t.writeOrSpeak,
       icon: Icons.record_voice_over_outlined,
       child: Column(
         children: [
@@ -654,14 +667,13 @@ class _SymptomScreenState extends State<SymptomScreen> {
             maxLines: 4,
             onChanged: (_) {
               setState(() {
-                _analysisSource = 'Manuel seçim';
+                _analysisSource = _manualSource;
               });
             },
-            decoration: const InputDecoration(
-              labelText: 'Semptom açıklaması',
-              hintText:
-                  'Örn: 20 dakikadır göğsümde baskı var, sol koluma vuruyor ve nefesim daralıyor',
-              prefixIcon: Icon(Icons.edit_note),
+            decoration: InputDecoration(
+              labelText: t.symptomDescription,
+              hintText: t.symptomInputHint,
+              prefixIcon: const Icon(Icons.edit_note),
               alignLabelWithHint: true,
             ),
           ),
@@ -675,7 +687,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
                     _isListening ? Icons.stop_circle_outlined : Icons.mic,
                   ),
                   label: Text(
-                    _isListening ? 'Durdur' : 'Konuş',
+                    _isListening ? t.stopListening : t.speak,
                   ),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 52),
@@ -691,7 +703,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
                   onPressed:
                       _freeTextController.text.trim().isEmpty ? null : _clearSymptomText,
                   icon: const Icon(Icons.clear),
-                  label: const Text('Temizle'),
+                  label: Text(t.clearSymptomInput),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 52),
                     shape: RoundedRectangleBorder(
@@ -711,7 +723,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
               onPressed: _isAnalyzing || !hasText ? null : _analyzeWithAI,
               icon: const Icon(Icons.auto_awesome),
               label: Text(
-                _isAnalyzing ? 'Analiz Ediliyor...' : 'AI ile Analiz Et',
+                _isAnalyzing ? t.analyzingWithAi : t.analyzeWithAi,
               ),
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 52),
@@ -733,6 +745,8 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildSpeechStatusCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -743,7 +757,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: _isListening
-              ? Colors.green.withOpacity(0.35)
+              ? Colors.green.withValues(alpha: 0.35)
               : const Color(0xFFE6E8EC),
         ),
       ),
@@ -756,7 +770,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              _speechStatus,
+              t.speechStatusDisplay(_speechStatus),
               style: TextStyle(
                 color: _isListening ? Colors.green : Colors.black54,
                 fontWeight: FontWeight.w600,
@@ -777,7 +791,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: const Color(0xFF1976D2).withOpacity(0.25),
+          color: const Color(0xFF1976D2).withValues(alpha: 0.25),
         ),
       ),
       child: Row(
@@ -804,13 +818,15 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildAnalysisSourceChip() {
+    final t = AppStrings.of(context);
+
     IconData icon;
     Color color;
 
-    if (_analysisSource == 'Backend AI analizi') {
+    if (_analysisSource == _backendSource) {
       icon = Icons.cloud_done_outlined;
       color = Colors.green;
-    } else if (_analysisSource == 'Yerel yedek analiz') {
+    } else if (_analysisSource == _fallbackSource) {
       icon = Icons.offline_bolt_outlined;
       color = Colors.orange;
     } else {
@@ -822,9 +838,11 @@ class _SymptomScreenState extends State<SymptomScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: color.withOpacity(0.28)),
+        border: Border.all(
+          color: color.withValues(alpha: 0.28),
+        ),
       ),
       child: Row(
         children: [
@@ -832,7 +850,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Analiz kaynağı: $_analysisSource',
+              '${t.analysisSourcePrefix}: ${t.analysisSourceDisplay(_analysisSource)}',
               style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.w700,
@@ -845,45 +863,47 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildSymptomOptionsSection() {
+    final t = AppStrings.of(context);
+
     final symptoms = [
       _SymptomOption(
-        title: 'Göğüs ağrısı / baskı',
+        title: t.chestPainPressure,
         icon: Icons.favorite_border,
         value: chestPain,
         onChanged: (value) => setState(() => chestPain = value),
       ),
       _SymptomOption(
-        title: 'Kola/çeneye yayılan ağrı',
+        title: t.radiatingPain,
         icon: Icons.call_made,
         value: painRadiation,
         onChanged: (value) => setState(() => painRadiation = value),
       ),
       _SymptomOption(
-        title: 'Nefes darlığı',
+        title: t.shortnessOfBreathText,
         icon: Icons.air,
         value: shortnessOfBreath,
         onChanged: (value) => setState(() => shortnessOfBreath = value),
       ),
       _SymptomOption(
-        title: 'Soğuk terleme',
+        title: t.coldSweatingText,
         icon: Icons.water_drop_outlined,
         value: coldSweating,
         onChanged: (value) => setState(() => coldSweating = value),
       ),
       _SymptomOption(
-        title: 'Mide bulantısı',
+        title: t.nauseaText,
         icon: Icons.sick_outlined,
         value: nausea,
         onChanged: (value) => setState(() => nausea = value),
       ),
       _SymptomOption(
-        title: 'Baş dönmesi',
+        title: t.dizzinessText,
         icon: Icons.blur_on,
         value: dizziness,
         onChanged: (value) => setState(() => dizziness = value),
       ),
       _SymptomOption(
-        title: 'Bayılma hissi',
+        title: t.faintingFeelingText,
         icon: Icons.warning_amber_rounded,
         value: faintingFeeling,
         onChanged: (value) => setState(() => faintingFeeling = value),
@@ -891,14 +911,10 @@ class _SymptomScreenState extends State<SymptomScreen> {
     ];
 
     return _buildSectionCard(
-      title: 'Semptom Seçenekleri',
+      title: t.symptomOptionsTitle,
       icon: Icons.checklist_rounded,
       child: Column(
-        children: symptoms
-            .map(
-              (item) => _buildSymptomOptionTile(item),
-            )
-            .toList(),
+        children: symptoms.map(_buildSymptomOptionTile).toList(),
       ),
     );
   }
@@ -911,7 +927,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: item.value
-              ? const Color(0xFFE53935).withOpacity(0.28)
+              ? const Color(0xFFE53935).withValues(alpha: 0.28)
               : const Color(0xFFE6E8EC),
         ),
       ),
@@ -919,7 +935,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
         value: item.value,
         onChanged: (value) {
           setState(() {
-            _analysisSource = 'Manuel seçim';
+            _analysisSource = _manualSource;
           });
           item.onChanged(value);
         },
@@ -940,14 +956,16 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildSeveritySection() {
+    final t = AppStrings.of(context);
+
     return _buildSectionCard(
-      title: 'Şiddet ve Süre',
+      title: t.severityAndDuration,
       icon: Icons.tune,
       child: Column(
         children: [
           _buildSliderCard(
-            title: 'Semptom Süresi',
-            valueText: '${symptomDuration.toInt()} dakika',
+            title: t.symptomDurationTitle,
+            valueText: t.minutesValue(symptomDuration.toInt()),
             icon: Icons.access_time,
             color: Colors.deepPurple,
             slider: Slider(
@@ -959,15 +977,15 @@ class _SymptomScreenState extends State<SymptomScreen> {
               onChanged: (value) {
                 setState(() {
                   symptomDuration = value;
-                  _analysisSource = 'Manuel seçim';
+                  _analysisSource = _manualSource;
                 });
               },
             ),
           ),
           const SizedBox(height: 12),
           _buildSliderCard(
-            title: 'Ağrı Şiddeti',
-            valueText: '${painSeverity.toInt()} / 10',
+            title: t.painSeverityTitle,
+            valueText: t.painSeverityValue(painSeverity.toInt()),
             icon: Icons.speed,
             color: Colors.orange,
             slider: Slider(
@@ -979,7 +997,7 @@ class _SymptomScreenState extends State<SymptomScreen> {
               onChanged: (value) {
                 setState(() {
                   painSeverity = value;
-                  _analysisSource = 'Manuel seçim';
+                  _analysisSource = _manualSource;
                 });
               },
             ),
@@ -1000,10 +1018,10 @@ class _SymptomScreenState extends State<SymptomScreen> {
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(14, 14, 14, 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.18),
+          color: color.withValues(alpha: 0.18),
         ),
       ),
       child: Column(
@@ -1037,13 +1055,15 @@ class _SymptomScreenState extends State<SymptomScreen> {
   }
 
   Widget _buildResultButton() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 18, bottom: 24),
       child: ElevatedButton.icon(
         onPressed: _calculateRisk,
         icon: const Icon(Icons.assignment_turned_in_outlined),
-        label: const Text('Sonucu Gör'),
+        label: Text(t.viewResult),
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFE53935),
           foregroundColor: Colors.white,
@@ -1058,10 +1078,12 @@ class _SymptomScreenState extends State<SymptomScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Semptom Değerlendirme'),
+        title: Text(t.symptomAssessmentTitle),
         elevation: 0,
       ),
       body: SingleChildScrollView(

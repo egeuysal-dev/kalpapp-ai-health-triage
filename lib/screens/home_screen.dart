@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/detail_dialogs.dart';
 import '../models/assessment_result.dart';
 import '../models/monitored_person.dart';
@@ -24,6 +26,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return StreamBuilder<UserProfile?>(
       stream: FirestoreUserService.profileStream(),
       initialData: profile,
@@ -39,7 +43,7 @@ class HomeScreen extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.info_outline),
-                tooltip: 'Uygulama Hakkında',
+                tooltip: t.aboutApp,
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -51,7 +55,7 @@ class HomeScreen extends StatelessWidget {
               ),
               IconButton(
                 icon: const Icon(Icons.logout),
-                tooltip: 'Çıkış Yap',
+                tooltip: t.logout,
                 onPressed: () async {
                   await FirebaseAuthService.signOut();
 
@@ -70,18 +74,18 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                _buildWelcomeCard(currentProfile),
+                _buildWelcomeCard(context, currentProfile),
                 const SizedBox(height: 16),
                 _buildActiveBraceletAlertCard(context),
                 const SizedBox(height: 16),
                 _buildCategorySection(
-                  title: 'Hızlı İşlemler',
+                  title: t.quickActions,
                   children: [
                     _buildMenuGridItem(
                       context,
                       icon: Icons.emergency,
-                      title: 'Kalp Değerlendirme',
-                      subtitle: 'Semptom analizi',
+                      title: t.heartAssessment,
+                      subtitle: t.symptomAnalysis,
                       color: const Color(0xFFE53935),
                       onTap: () {
                         Navigator.push(
@@ -96,8 +100,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.people_alt_outlined,
-                      title: 'Takip Ettiklerim',
-                      subtitle: 'Yakın ve bileklik',
+                      title: t.monitoredPeople,
+                      subtitle: t.relativesAndWearable,
                       color: const Color(0xFF1976D2),
                       onTap: () {
                         Navigator.push(
@@ -112,13 +116,13 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _buildCategorySection(
-                  title: 'Kayıtlar ve Uyarılar',
+                  title: t.recordsAndAlerts,
                   children: [
                     _buildMenuGridItem(
                       context,
                       icon: Icons.assignment_turned_in_outlined,
-                      title: 'Son Değerlendirme',
-                      subtitle: 'Son risk sonucu',
+                      title: t.lastAssessment,
+                      subtitle: t.lastRiskResult,
                       color: Colors.green,
                       onTap: () {
                         _showLastAssessmentDialog(context);
@@ -127,8 +131,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.history,
-                      title: 'Geçmiş',
-                      subtitle: 'Risk kayıtları',
+                      title: t.history,
+                      subtitle: t.riskRecords,
                       color: Colors.deepPurple,
                       onTap: () {
                         Navigator.push(
@@ -142,8 +146,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.notifications_active_outlined,
-                      title: 'Bileklik Uyarıları',
-                      subtitle: 'Uyarı geçmişi',
+                      title: t.braceletAlerts,
+                      subtitle: t.alertHistory,
                       color: Colors.orange,
                       onTap: () {
                         Navigator.push(
@@ -158,8 +162,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.monitor_heart_outlined,
-                      title: 'Bileklik Takibi',
-                      subtitle: 'Canlı/demo durum',
+                      title: t.braceletMonitoring,
+                      subtitle: t.liveDemoStatus,
                       color: Colors.teal,
                       onTap: () {
                         Navigator.push(
@@ -176,13 +180,13 @@ class HomeScreen extends StatelessWidget {
                 _buildLastAssessmentCompactCard(context),
                 const SizedBox(height: 16),
                 _buildCategorySection(
-                  title: 'Hesap',
+                  title: t.account,
                   children: [
                     _buildMenuGridItem(
                       context,
                       icon: Icons.edit,
-                      title: 'Profili Düzenle',
-                      subtitle: 'Bilgileri güncelle',
+                      title: t.editProfile,
+                      subtitle: t.updateInformation,
                       color: Colors.indigo,
                       onTap: () {
                         Navigator.push(
@@ -197,8 +201,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.person,
-                      title: 'Profil Özeti',
-                      subtitle: 'Kayıtlı bilgiler',
+                      title: t.profileSummary,
+                      subtitle: t.savedInformation,
                       color: Colors.blueGrey,
                       onTap: () {
                         _showProfileSummary(context, currentProfile);
@@ -207,8 +211,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.settings,
-                      title: 'Hesap Güvenliği',
-                      subtitle: 'Veri ve oturum',
+                      title: t.accountSecurity,
+                      subtitle: t.dataAndSession,
                       color: Colors.brown,
                       onTap: () {
                         Navigator.push(
@@ -222,8 +226,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.logout,
-                      title: 'Çıkış Yap',
-                      subtitle: 'Oturumu kapat',
+                      title: t.logout,
+                      subtitle: t.closeSession,
                       color: Colors.redAccent,
                       onTap: () async {
                         await FirebaseAuthService.signOut();
@@ -243,13 +247,13 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 16),
                 _buildCategorySection(
-                  title: 'Bilgilendirme',
+                  title: t.information,
                   children: [
                     _buildMenuGridItem(
                       context,
                       icon: Icons.privacy_tip_outlined,
-                      title: 'Gizlilik ve KVKK',
-                      subtitle: 'Veri politikası',
+                      title: t.privacyAndKvkk,
+                      subtitle: t.dataPolicy,
                       color: Colors.cyan,
                       onTap: () {
                         Navigator.push(
@@ -263,8 +267,8 @@ class HomeScreen extends StatelessWidget {
                     _buildMenuGridItem(
                       context,
                       icon: Icons.info_outline,
-                      title: 'Uygulama Hakkında',
-                      subtitle: 'Amaç ve sürüm',
+                      title: t.aboutApp,
+                      subtitle: t.purposeAndVersion,
                       color: Colors.pink,
                       onTap: () {
                         Navigator.push(
@@ -290,6 +294,7 @@ class HomeScreen extends StatelessWidget {
     if (level == 'Kritik Risk') return Colors.red;
     if (level == 'Yüksek Risk') return Colors.orange;
     if (level == 'Orta Risk') return Colors.amber.shade700;
+
     return Colors.green;
   }
 
@@ -297,6 +302,7 @@ class HomeScreen extends StatelessWidget {
     if (level == 'Kritik Risk') return Icons.warning_rounded;
     if (level == 'Yüksek Risk') return Icons.priority_high_rounded;
     if (level == 'Orta Risk') return Icons.info_outline;
+
     return Icons.check_circle_outline;
   }
 
@@ -304,6 +310,7 @@ class HomeScreen extends StatelessWidget {
     if (status == 'Kritik uyarı') return Colors.red;
     if (status == 'Düşük kalp ritmi uyarısı') return Colors.orange;
     if (status == 'Yüksek kalp ritmi uyarısı') return Colors.deepOrange;
+
     return Colors.green;
   }
 
@@ -311,6 +318,7 @@ class HomeScreen extends StatelessWidget {
     if (status == 'Kritik uyarı') return Icons.warning_rounded;
     if (status == 'Düşük kalp ritmi uyarısı') return Icons.arrow_downward;
     if (status == 'Yüksek kalp ritmi uyarısı') return Icons.arrow_upward;
+
     return Icons.check_circle_outline;
   }
 
@@ -320,7 +328,13 @@ class HomeScreen extends StatelessWidget {
         status == 'Yüksek kalp ritmi uyarısı';
   }
 
-  Widget _buildWelcomeCard(UserProfile currentProfile) {
+  Widget _buildWelcomeCard(
+    BuildContext context,
+    UserProfile currentProfile,
+  ) {
+    final t = AppStrings.of(context);
+    final gender = t.genderText(currentProfile.gender);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -345,7 +359,7 @@ class HomeScreen extends StatelessWidget {
             width: 62,
             height: 62,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
+              color: Colors.white.withValues(alpha: 0.18),
               borderRadius: BorderRadius.circular(18),
             ),
             child: const Icon(
@@ -360,7 +374,7 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hoş geldiniz,\n${currentProfile.fullName}',
+                  t.welcomeUser(currentProfile.fullName),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -370,7 +384,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Yaş: ${currentProfile.age} • ${currentProfile.gender}',
+                  t.ageGender(currentProfile.age, gender),
                   style: const TextStyle(
                     color: Colors.white70,
                     fontSize: 14,
@@ -385,6 +399,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildActiveBraceletAlertCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return StreamBuilder<List<MonitoredPerson>>(
       stream: MonitoredPersonService.monitoredPeopleStream(),
       builder: (context, snapshot) {
@@ -400,15 +416,16 @@ class HomeScreen extends StatelessWidget {
 
         final alert = alerts.first;
         final color = _braceletStatusColor(alert.status);
+        final statusText = t.braceletStatusText(alert.status);
 
         return Container(
           width: double.infinity,
           padding: const EdgeInsets.all(18),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.10),
+            color: color.withValues(alpha: 0.10),
             borderRadius: BorderRadius.circular(22),
             border: Border.all(
-              color: color.withOpacity(0.35),
+              color: color.withValues(alpha: 0.35),
             ),
             boxShadow: const [
               BoxShadow(
@@ -431,7 +448,7 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      'Aktif Bileklik Uyarısı',
+                      t.activeBraceletAlert,
                       style: TextStyle(
                         color: color,
                         fontSize: 18,
@@ -443,7 +460,7 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                '${alert.fullName} için ${alert.status.toLowerCase()} algılandı.',
+                t.braceletAlertDetected(alert.fullName, statusText),
                 style: TextStyle(
                   color: color,
                   fontWeight: FontWeight.w700,
@@ -452,9 +469,9 @@ class HomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Kalp ritmi: ${alert.heartRate} bpm\n'
-                'Cihaz ID: ${alert.deviceId}\n'
-                'Son ölçüm: ${alert.lastMeasurement}',
+                '${t.heartRate}: ${alert.heartRate} bpm\n'
+                '${t.deviceId}: ${alert.deviceId}\n'
+                '${t.lastMeasurement}: ${alert.lastMeasurement}',
                 style: const TextStyle(
                   color: Colors.black87,
                   height: 1.45,
@@ -475,7 +492,7 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.monitor_heart_outlined),
-                      label: const Text('Detayı Aç'),
+                      label: Text(t.openDetail),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: color,
                         foregroundColor: Colors.white,
@@ -493,7 +510,7 @@ class HomeScreen extends StatelessWidget {
                         await MonitoredPersonService.simulateNormal(alert.id);
                       },
                       icon: const Icon(Icons.check_circle_outline),
-                      label: const Text('Normalleştir'),
+                      label: Text(t.normalize),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: color,
                         side: BorderSide(color: color),
@@ -568,7 +585,7 @@ class HomeScreen extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: color.withOpacity(0.08),
+      color: color.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
@@ -578,7 +595,7 @@ class HomeScreen extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             border: Border.all(
-              color: color.withOpacity(0.20),
+              color: color.withValues(alpha: 0.20),
             ),
           ),
           child: Column(
@@ -619,6 +636,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildLastAssessmentCompactCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return StreamBuilder<List<AssessmentResult>>(
       stream: FirestoreUserService.assessmentsStream(),
       builder: (context, snapshot) {
@@ -632,15 +651,15 @@ class HomeScreen extends StatelessWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(22),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                SizedBox(
+                const SizedBox(
                   width: 22,
                   height: 22,
                   child: CircularProgressIndicator(strokeWidth: 2.5),
                 ),
-                SizedBox(width: 14),
-                Text('Son değerlendirme yükleniyor...'),
+                const SizedBox(width: 14),
+                Text(t.lastAssessmentLoading),
               ],
             ),
           );
@@ -661,15 +680,15 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
             ),
-            child: const Row(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.history_toggle_off, color: Colors.black45),
-                SizedBox(width: 12),
+                const Icon(Icons.history_toggle_off, color: Colors.black45),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
-                    'Henüz değerlendirme yapılmadı. İlk sonuç burada görünecek.',
-                    style: TextStyle(
+                    t.noAssessmentYet,
+                    style: const TextStyle(
                       color: Colors.black54,
                       height: 1.4,
                     ),
@@ -682,6 +701,7 @@ class HomeScreen extends StatelessWidget {
 
         final last = assessments.first;
         final color = _riskColor(last.riskLevel);
+        final riskText = t.riskLevelText(last.riskLevel);
 
         return Container(
           width: double.infinity,
@@ -703,7 +723,7 @@ class HomeScreen extends StatelessWidget {
                 width: 54,
                 height: 54,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(
@@ -717,23 +737,23 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Son Değerlendirme',
-                      style: TextStyle(
+                    Text(
+                      t.lastAssessment,
+                      style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      last.riskLevel,
+                      riskText,
                       style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Skor: ${last.riskScore} • ${last.createdAt}',
+                      t.scoreAndDate(last.riskScore, last.createdAt),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -758,14 +778,15 @@ class HomeScreen extends StatelessWidget {
   }
 
   Future<void> _showLastAssessmentDialog(BuildContext context) async {
+    final t = AppStrings.of(context);
     final assessments = await FirestoreUserService.loadAssessments();
 
     if (!context.mounted) return;
 
     if (assessments.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Henüz kayıtlı değerlendirme yok.'),
+        SnackBar(
+          content: Text(t.noSavedAssessment),
         ),
       );
       return;
