@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../models/bracelet_alert.dart';
 import '../services/monitored_person_service.dart';
 
@@ -9,6 +11,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     if (type == 'Kritik uyarı') return Colors.red;
     if (type == 'Düşük kalp ritmi uyarısı') return Colors.orange;
     if (type == 'Yüksek kalp ritmi uyarısı') return Colors.deepOrange;
+
     return Colors.blueGrey;
   }
 
@@ -16,14 +19,8 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     if (type == 'Kritik uyarı') return Icons.warning_rounded;
     if (type == 'Düşük kalp ritmi uyarısı') return Icons.arrow_downward;
     if (type == 'Yüksek kalp ritmi uyarısı') return Icons.arrow_upward;
-    return Icons.info_outline;
-  }
 
-  String _shortAlertTitle(String type) {
-    if (type == 'Kritik uyarı') return 'Kritik';
-    if (type == 'Düşük kalp ritmi uyarısı') return 'Düşük Ritim';
-    if (type == 'Yüksek kalp ritmi uyarısı') return 'Yüksek Ritim';
-    return type;
+    return Icons.info_outline;
   }
 
   int _criticalCount(List<BraceletAlert> alerts) {
@@ -43,24 +40,24 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
   }
 
   Future<void> _clearAlerts(BuildContext context) async {
+    final t = AppStrings.of(context);
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Uyarı Geçmişini Sil'),
-        content: const Text(
-          'Tüm bileklik uyarı geçmişi silinsin mi?',
-        ),
+        title: Text(t.clearBraceletAlertDialogTitle),
+        content: Text(t.clearBraceletAlertDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Vazgeç'),
+            child: Text(t.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sil'),
+            child: Text(t.commonDelete),
           ),
         ],
       ),
@@ -73,13 +70,18 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Bileklik uyarı geçmişi silindi.'),
+      SnackBar(
+        content: Text(t.braceletAlertHistoryCleared),
       ),
     );
   }
 
-  Widget _buildSummaryHeader(List<BraceletAlert> alerts) {
+  Widget _buildSummaryHeader(
+    BuildContext context,
+    List<BraceletAlert> alerts,
+  ) {
+    final t = AppStrings.of(context);
+
     final total = alerts.length;
     final critical = _criticalCount(alerts);
     final low = _lowCount(alerts);
@@ -108,18 +110,18 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(
+              const Icon(
                 Icons.notifications_active_outlined,
                 color: Colors.white,
                 size: 34,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Bileklik Uyarı Özeti',
-                  style: TextStyle(
+                  t.braceletAlertSummary,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 21,
                     fontWeight: FontWeight.bold,
@@ -133,7 +135,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildSummaryBox(
-                  label: 'Toplam',
+                  label: t.totalAlerts,
                   value: total.toString(),
                   icon: Icons.list_alt,
                 ),
@@ -141,7 +143,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: _buildSummaryBox(
-                  label: 'Kritik',
+                  label: t.criticalAlertShort,
                   value: critical.toString(),
                   icon: Icons.warning_rounded,
                 ),
@@ -153,7 +155,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
             children: [
               Expanded(
                 child: _buildSummaryBox(
-                  label: 'Düşük',
+                  label: t.lowRhythmShort,
                   value: low.toString(),
                   icon: Icons.arrow_downward,
                 ),
@@ -161,7 +163,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: _buildSummaryBox(
-                  label: 'Yüksek',
+                  label: t.highRhythmShort,
                   value: high.toString(),
                   icon: Icons.arrow_upward,
                 ),
@@ -174,11 +176,15 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.all(13),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.16),
+                color: Colors.white.withValues(alpha: 0.16),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
-                'Son uyarı: ${latest.personName} • ${_shortAlertTitle(latest.alertType)} • ${latest.heartRate} bpm',
+                t.latestBraceletAlert(
+                  personName: latest.personName,
+                  alertType: latest.alertType,
+                  heartRate: latest.heartRate,
+                ),
                 style: const TextStyle(
                   color: Colors.white,
                   height: 1.35,
@@ -200,10 +206,10 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.16),
+        color: Colors.white.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withOpacity(0.12),
+          color: Colors.white.withValues(alpha: 0.12),
         ),
       ),
       child: Row(
@@ -241,7 +247,9 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard() {
+  Widget _buildInfoCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
@@ -250,21 +258,21 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFF1976D2).withOpacity(0.25),
+          color: const Color(0xFF1976D2).withValues(alpha: 0.25),
         ),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.info_outline,
             color: Color(0xFF1976D2),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Bu ekran, sanal bileklikten gelen uyarı olaylarını kaydeder. Gerçek üründe bu kayıtlar cihazdan gelen canlı sensör verileriyle oluşur.',
-              style: TextStyle(
+              t.braceletAlertInfoMessage,
+              style: const TextStyle(
                 color: Color(0xFF0D47A1),
                 height: 1.45,
                 fontWeight: FontWeight.w600,
@@ -276,7 +284,11 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAlertCard(BraceletAlert alert) {
+  Widget _buildAlertCard(
+    BuildContext context,
+    BraceletAlert alert,
+  ) {
+    final t = AppStrings.of(context);
     final color = _alertColor(alert.alertType);
 
     return Container(
@@ -286,7 +298,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: color.withOpacity(0.22),
+          color: color.withValues(alpha: 0.22),
         ),
         boxShadow: const [
           BoxShadow(
@@ -305,7 +317,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
                 width: 58,
                 height: 58,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.12),
+                  color: color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(18),
                 ),
                 child: Icon(
@@ -320,7 +332,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _shortAlertTitle(alert.alertType),
+                      t.shortBraceletAlertTitle(alert.alertType),
                       style: TextStyle(
                         color: color,
                         fontWeight: FontWeight.bold,
@@ -353,14 +365,14 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
                   vertical: 7,
                 ),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.10),
+                  color: color.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(30),
                   border: Border.all(
-                    color: color.withOpacity(0.22),
+                    color: color.withValues(alpha: 0.22),
                   ),
                 ),
                 child: Text(
-                  alert.alertType == 'Kritik uyarı' ? 'ACİL' : 'UYARI',
+                  t.braceletAlertBadgeText(alert.alertType),
                   style: TextStyle(
                     color: color,
                     fontSize: 11,
@@ -376,7 +388,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.favorite,
-                  label: 'Kalp Ritmi',
+                  label: t.heartRate,
                   value: '${alert.heartRate} bpm',
                   color: color,
                 ),
@@ -385,7 +397,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               Expanded(
                 child: _buildMetricPill(
                   icon: Icons.watch_outlined,
-                  label: 'Cihaz',
+                  label: t.deviceId,
                   value: alert.deviceId,
                   color: const Color(0xFF1976D2),
                 ),
@@ -405,8 +417,8 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
             ),
             child: Text(
               alert.message.isEmpty
-                  ? 'Uyarı açıklaması bulunmuyor.'
-                  : alert.message,
+                  ? t.braceletAlertMessageMissing
+                  : t.braceletAlertMessageText(alert.message),
               style: const TextStyle(
                 color: Colors.black87,
                 height: 1.45,
@@ -428,10 +440,10 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.18),
+          color: color.withValues(alpha: 0.18),
         ),
       ),
       child: Row(
@@ -475,7 +487,9 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(28),
@@ -492,28 +506,28 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               ),
             ],
           ),
-          child: const Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.notifications_none,
                 size: 66,
                 color: Colors.black38,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'Henüz bileklik uyarısı yok.',
+                t.braceletAlertEmptyTitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                'Takip Ettiklerim ekranından düşük, yüksek veya kritik ritim simülasyonu oluşturduğunuzda kayıtlar burada görünür.',
+                t.braceletAlertEmptyMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black54,
                   height: 1.4,
                 ),
@@ -526,6 +540,8 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
   }
 
   Widget _buildClearButton(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: SizedBox(
@@ -533,7 +549,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
         child: OutlinedButton.icon(
           onPressed: () => _clearAlerts(context),
           icon: const Icon(Icons.delete_outline),
-          label: const Text('Uyarı Geçmişini Sil'),
+          label: Text(t.clearBraceletAlertHistory),
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.red,
             side: const BorderSide(color: Colors.red),
@@ -549,10 +565,12 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Bileklik Uyarı Geçmişi'),
+        title: Text(t.braceletAlertHistoryTitle),
       ),
       body: StreamBuilder<List<BraceletAlert>>(
         stream: MonitoredPersonService.braceletAlertsStream(),
@@ -568,7 +586,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Uyarı geçmişi yüklenirken hata oluştu:\n${snapshot.error}',
+                  '${t.braceletAlertLoadError}:\n${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -578,7 +596,7 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
           final alerts = snapshot.data ?? [];
 
           if (alerts.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(context);
           }
 
           return Column(
@@ -587,9 +605,11 @@ class BraceletAlertHistoryScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: 8),
                   children: [
-                    _buildSummaryHeader(alerts),
-                    _buildInfoCard(),
-                    ...alerts.map(_buildAlertCard),
+                    _buildSummaryHeader(context, alerts),
+                    _buildInfoCard(context),
+                    ...alerts.map(
+                      (alert) => _buildAlertCard(context, alert),
+                    ),
                   ],
                 ),
               ),
