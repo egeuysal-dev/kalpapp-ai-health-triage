@@ -27,6 +27,9 @@ The application is developed only as an educational prototype and health awarene
 * Virtual smart bracelet / smartwatch device ID
 * Wearable alert history
 * Active wearable alert scenario
+* Turkish and English language support
+* Language selection with persistent local preference
+* Localized authentication and validation messages
 
 ## Tech Stack
 
@@ -94,6 +97,29 @@ The current version demonstrates the main user flows, including symptom assessme
 * KVKK/GDPR-compliant consent and data management
 * Premium subscription and ad-free usage model
 
+## Screenshots
+
+### Login Screen
+![Login Screen](docs/screenshots/login_screen.png)
+
+### Home Screen
+![Home Screen](docs/screenshots/home_screen.png)
+
+### Symptom Assessment
+![Symptom Assessment](docs/screenshots/symptom_screen.png)
+
+### Assessment Result
+![Assessment Result](docs/screenshots/result_screen.png)
+
+### Monitored People
+![Monitored People](docs/screenshots/monitored_people_screen.png)
+
+### Wearable Alert History
+![Wearable Alert History](docs/screenshots/wearable_alert_history_screen.png)
+
+### Language Settings
+![Language Settings](docs/screenshots/language_settings_screen.png)
+
 ## Developer
 
 Ege Uysal
@@ -132,6 +158,9 @@ Uygulama yalnızca eğitim amaçlı bir prototip ve sağlık farkındalık deste
 * Sanal akıllı bileklik / akıllı saat cihaz kimliği
 * Giyilebilir cihaz uyarı geçmişi
 * Aktif giyilebilir cihaz uyarı senaryosu
+* Türkçe ve İngilizce dil desteği
+* Cihazda kaydedilen dil tercihi
+* Giriş, kayıt ve doğrulama mesajlarında dil desteği
 
 ## Kullanılan Teknolojiler
 

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/detail_dialogs.dart';
 import '../models/assessment_result.dart';
 import '../services/firestore_user_service.dart';
@@ -10,6 +12,7 @@ class HistoryScreen extends StatelessWidget {
     if (level == 'Kritik Risk') return Colors.red;
     if (level == 'Yüksek Risk') return Colors.orange;
     if (level == 'Orta Risk') return Colors.amber.shade700;
+
     return Colors.green;
   }
 
@@ -17,40 +20,43 @@ class HistoryScreen extends StatelessWidget {
     if (level == 'Kritik Risk') return Icons.warning_rounded;
     if (level == 'Yüksek Risk') return Icons.priority_high_rounded;
     if (level == 'Orta Risk') return Icons.info_outline;
+
     return Icons.check_circle_outline;
   }
 
   Future<void> _clearHistory(BuildContext context) async {
+    final t = AppStrings.of(context);
+
     await FirestoreUserService.clearAssessments();
 
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Geçmiş değerlendirmeler silindi.'),
+      SnackBar(
+        content: Text(t.assessmentHistoryCleared),
       ),
     );
   }
 
   Future<void> _showClearConfirmDialog(BuildContext context) async {
+    final t = AppStrings.of(context);
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Geçmişi Sil'),
-        content: const Text(
-          'Tüm değerlendirme geçmişi silinsin mi?',
-        ),
+        title: Text(t.clearHistoryDialogTitle),
+        content: Text(t.clearHistoryDialogMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Vazgeç'),
+            child: Text(t.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sil'),
+            child: Text(t.commonDelete),
           ),
         ],
       ),
@@ -65,7 +71,16 @@ class HistoryScreen extends StatelessWidget {
     BuildContext context,
     AssessmentResult item,
   ) {
+    final t = AppStrings.of(context);
     final color = _riskColor(item.riskLevel);
+
+    final riskLevelText = t.riskLevelText(item.riskLevel);
+    final actionText = item.actionLevel.isEmpty
+        ? t.notSpecified
+        : t.actionLevelText(item.actionLevel);
+    final sourceText = item.analysisSource.isEmpty
+        ? t.notSpecified
+        : t.analysisSourceDisplay(item.analysisSource);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -80,7 +95,7 @@ class HistoryScreen extends StatelessWidget {
           ),
         ],
         border: Border.all(
-          color: color.withOpacity(0.14),
+          color: color.withValues(alpha: 0.14),
         ),
       ),
       child: ListTile(
@@ -89,7 +104,7 @@ class HistoryScreen extends StatelessWidget {
           width: 54,
           height: 54,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.12),
+            color: color.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Icon(
@@ -98,7 +113,7 @@ class HistoryScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          item.riskLevel,
+          riskLevelText,
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: color,
@@ -108,10 +123,12 @@ class HistoryScreen extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 8),
           child: Text(
-            'Skor: ${item.riskScore}\n'
-            'Aksiyon: ${item.actionLevel}\n'
-            'Kaynak: ${item.analysisSource}\n'
-            'Tarih: ${item.createdAt}',
+            t.historyCardSubtitle(
+              score: item.riskScore,
+              action: actionText,
+              source: sourceText,
+              date: item.createdAt,
+            ),
             style: const TextStyle(height: 1.45),
           ),
         ),
@@ -127,7 +144,9 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(28),
@@ -144,28 +163,28 @@ class HistoryScreen extends StatelessWidget {
               ),
             ],
           ),
-          child: const Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
+              const Icon(
                 Icons.history_toggle_off,
                 size: 64,
                 color: Colors.black38,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Text(
-                'Henüz kayıtlı değerlendirme yok.',
+                t.emptyHistoryTitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Text(
-                'Yeni bir değerlendirme yaptıktan sonra geçmiş kayıtların burada görünecek.',
+                t.emptyHistoryMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black54,
                   height: 1.4,
                 ),
@@ -177,7 +196,9 @@ class HistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderInfoCard() {
+  Widget _buildHeaderInfoCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -186,21 +207,21 @@ class HistoryScreen extends StatelessWidget {
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFF1976D2).withOpacity(0.25),
+          color: const Color(0xFF1976D2).withValues(alpha: 0.25),
         ),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.info_outline,
             color: Color(0xFF1976D2),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Bu ekranda önceki semptom değerlendirmeleri, risk skoru, aksiyon seviyesi ve analiz kaynağı ile birlikte listelenir.',
-              style: TextStyle(
+              t.historyInfoMessage,
+              style: const TextStyle(
                 color: Color(0xFF0D47A1),
                 height: 1.45,
                 fontWeight: FontWeight.w600,
@@ -213,6 +234,8 @@ class HistoryScreen extends StatelessWidget {
   }
 
   Widget _buildClearButton(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       child: SizedBox(
@@ -220,7 +243,7 @@ class HistoryScreen extends StatelessWidget {
         child: OutlinedButton.icon(
           onPressed: () => _showClearConfirmDialog(context),
           icon: const Icon(Icons.delete_outline),
-          label: const Text('Tüm Geçmişi Sil'),
+          label: Text(t.clearAllHistory),
           style: OutlinedButton.styleFrom(
             foregroundColor: Colors.red,
             side: const BorderSide(color: Colors.red),
@@ -236,10 +259,12 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Geçmiş Değerlendirmeler'),
+        title: Text(t.historyScreenTitle),
         elevation: 0,
       ),
       body: StreamBuilder<List<AssessmentResult>>(
@@ -256,7 +281,7 @@ class HistoryScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Bir hata oluştu:\n${snapshot.error}',
+                  '${t.errorOccurredPrefix}:\n${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -266,7 +291,7 @@ class HistoryScreen extends StatelessWidget {
           final assessments = snapshot.data ?? [];
 
           if (assessments.isEmpty) {
-            return _buildEmptyState();
+            return _buildEmptyState(context);
           }
 
           return Column(
@@ -275,7 +300,7 @@ class HistoryScreen extends StatelessWidget {
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: 8),
                   children: [
-                    _buildHeaderInfoCard(),
+                    _buildHeaderInfoCard(context),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                       child: Column(
