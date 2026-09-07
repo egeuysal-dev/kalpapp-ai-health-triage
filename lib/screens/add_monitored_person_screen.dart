@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/primary_button.dart';
 import '../models/monitored_person.dart';
 import '../services/monitored_person_service.dart';
@@ -51,62 +53,67 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   String _generateDemoDeviceId() {
     final now = DateTime.now().millisecondsSinceEpoch;
     final shortCode = now.toString().substring(now.toString().length - 5);
+
     return 'KAPP-$shortCode';
   }
 
   String? _validateName(String? value) {
+    final t = AppStrings.of(context);
     final text = value?.trim() ?? '';
 
     if (text.isEmpty) {
-      return 'Yakınınızın adı zorunludur.';
+      return t.monitoredPersonNameRequired;
     }
 
     if (text.length < 3) {
-      return 'Ad en az 3 karakter olmalıdır.';
+      return t.monitoredPersonNameMinLength;
     }
 
     return null;
   }
 
   String? _validateRelation(String? value) {
+    final t = AppStrings.of(context);
     final text = value?.trim() ?? '';
 
     if (text.isEmpty) {
-      return 'Yakınlık derecesi zorunludur.';
+      return t.monitoredPersonRelationRequired;
     }
 
     return null;
   }
 
   String? _validateAge(String? value) {
+    final t = AppStrings.of(context);
     final text = value?.trim() ?? '';
 
     if (text.isEmpty) {
-      return 'Yaş zorunludur.';
+      return t.monitoredPersonAgeRequired;
     }
 
     final age = int.tryParse(text);
 
     if (age == null) {
-      return 'Geçerli bir yaş girin.';
+      return t.monitoredPersonAgeInvalid;
     }
 
     if (age < 1 || age > 120) {
-      return 'Yaş 1 ile 120 arasında olmalıdır.';
+      return t.monitoredPersonAgeRange;
     }
 
     return null;
   }
 
   String? _validateDeviceId(String? value) {
+    final t = AppStrings.of(context);
     final text = value?.trim() ?? '';
 
     if (text.isEmpty) {
-      return 'Cihaz kimliği zorunludur.';
+      return t.monitoredPersonDeviceRequired;
     }
 
     if (text.length < 5) {
-      return 'Cihaz kimliği çok kısa.';
+      return t.monitoredPersonDeviceTooShort;
     }
 
     return null;
@@ -115,10 +122,12 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
 
+    final t = AppStrings.of(context);
+
     if (!_formKey.currentState!.validate()) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lütfen formdaki eksik veya hatalı alanları düzeltin.'),
+        SnackBar(
+          content: Text(t.monitoredPersonFormInvalid),
         ),
       );
       return;
@@ -151,8 +160,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Yakın ve sanal bileklik başarıyla eklendi.'),
+        SnackBar(
+          content: Text(t.monitoredPersonAddSuccess),
         ),
       );
 
@@ -161,8 +170,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Yakın eklenirken bir hata oluştu.'),
+        SnackBar(
+          content: Text(t.monitoredPersonAddError),
         ),
       );
     } finally {
@@ -173,6 +182,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildHeaderCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -191,31 +202,31 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.watch_outlined,
             color: Colors.white,
             size: 42,
           ),
-          SizedBox(width: 14),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Yakın ve Bileklik Ekle',
-                  style: TextStyle(
+                  t.addMonitoredPersonHeaderTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 23,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'Kalp hastalığı riski taşıyan yakınınız için sanal bileklik profili oluşturun.',
-                  style: TextStyle(
+                  t.addMonitoredPersonHeaderMessage,
+                  style: const TextStyle(
                     color: Colors.white70,
                     height: 1.4,
                   ),
@@ -229,6 +240,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildDemoInfoCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(18),
@@ -236,21 +249,21 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
         color: const Color(0xFFE3F2FD),
         borderRadius: BorderRadius.circular(22),
         border: Border.all(
-          color: const Color(0xFF1976D2).withOpacity(0.25),
+          color: const Color(0xFF1976D2).withValues(alpha: 0.25),
         ),
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.info_outline,
             color: Color(0xFF1976D2),
           ),
-          SizedBox(width: 12),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Bu prototipte fiziksel bileklik yerine demo cihaz kimliği kullanılır. Gerçek üründe bu kimlik, bileklikten gelen canlı sensör verileriyle eşleştirilecektir.',
-              style: TextStyle(
+              t.addMonitoredPersonDemoInfo,
+              style: const TextStyle(
                 color: Color(0xFF0D47A1),
                 height: 1.45,
                 fontWeight: FontWeight.w600,
@@ -287,15 +300,23 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildGenderDropdown() {
+    final t = AppStrings.of(context);
+
     return DropdownButtonFormField<String>(
-      value: gender,
-      decoration: const InputDecoration(
-        labelText: 'Cinsiyet',
-        prefixIcon: Icon(Icons.wc),
+      initialValue: gender,
+      decoration: InputDecoration(
+        labelText: t.genderLabel,
+        prefixIcon: const Icon(Icons.wc),
       ),
-      items: const [
-        DropdownMenuItem(value: 'Erkek', child: Text('Erkek')),
-        DropdownMenuItem(value: 'Kadın', child: Text('Kadın')),
+      items: [
+        DropdownMenuItem(
+          value: 'Erkek',
+          child: Text(t.male),
+        ),
+        DropdownMenuItem(
+          value: 'Kadın',
+          child: Text(t.female),
+        ),
       ],
       onChanged: (value) {
         setState(() {
@@ -306,6 +327,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildDevicePreviewCard() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -322,7 +345,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             width: 54,
             height: 54,
             decoration: BoxDecoration(
-              color: const Color(0xFF1976D2).withOpacity(0.12),
+              color: const Color(0xFF1976D2).withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
@@ -336,9 +359,9 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Demo Bileklik Kimliği',
-                  style: TextStyle(
+                Text(
+                  t.demoBraceletId,
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 15,
                   ),
@@ -361,7 +384,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
               });
             },
             icon: const Icon(Icons.refresh),
-            tooltip: 'Yeni cihaz kimliği oluştur',
+            tooltip: t.createNewDeviceIdTooltip,
           ),
         ],
       ),
@@ -382,7 +405,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: value
-              ? const Color(0xFFE53935).withOpacity(0.28)
+              ? const Color(0xFFE53935).withValues(alpha: 0.28)
               : const Color(0xFFE6E8EC),
         ),
       ),
@@ -413,6 +436,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildRiskSummaryBox() {
+    final t = AppStrings.of(context);
+
     final riskCount = [
       previousHeartAttack,
       heartDisease,
@@ -423,30 +448,25 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
     ].where((item) => item).length;
 
     Color color;
-    String message;
 
     if (riskCount >= 4) {
       color = Colors.red;
-      message = 'Yüksek risk profili';
     } else if (riskCount >= 2) {
       color = Colors.orange;
-      message = 'Orta risk profili';
     } else if (riskCount == 1) {
       color = Colors.amber.shade700;
-      message = 'Düşük/orta risk profili';
     } else {
       color = Colors.green;
-      message = 'Belirgin risk faktörü seçilmedi';
     }
 
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.10),
+        color: color.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.25),
+          color: color.withValues(alpha: 0.25),
         ),
       ),
       child: Row(
@@ -458,7 +478,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              '$message • Seçilen risk faktörü: $riskCount',
+              t.riskProfileSummary(riskCount: riskCount),
               style: TextStyle(
                 color: color,
                 fontWeight: FontWeight.w700,
@@ -515,13 +535,15 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildPersonInfoSection() {
+    final t = AppStrings.of(context);
+
     return _buildModernSection(
-      title: 'Yakın Bilgileri',
+      title: t.personInformation,
       child: Column(
         children: [
           _buildTextField(
             controller: _nameController,
-            label: 'Ad Soyad',
+            label: t.fullNameLabel,
             icon: Icons.person_outline,
             textInputAction: TextInputAction.next,
             validator: _validateName,
@@ -529,8 +551,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             controller: _relationController,
-            label: 'Yakınlık Derecesi',
-            hint: 'Örn: Dede, Anne, Baba',
+            label: t.relationLabel,
+            hint: t.relationHint,
             icon: Icons.family_restroom,
             textInputAction: TextInputAction.next,
             validator: _validateRelation,
@@ -538,7 +560,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             controller: _ageController,
-            label: 'Yaş',
+            label: t.ageLabel,
             icon: Icons.cake_outlined,
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
@@ -552,16 +574,18 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildBraceletInfoSection() {
+    final t = AppStrings.of(context);
+
     return _buildModernSection(
-      title: 'Bileklik Bilgileri',
+      title: t.braceletInformation,
       child: Column(
         children: [
           _buildDevicePreviewCard(),
           const SizedBox(height: 12),
           _buildTextField(
             controller: _deviceIdController,
-            label: 'Cihaz Kimliği',
-            hint: 'Örn: KAPP-83721',
+            label: t.deviceIdLabel,
+            hint: t.deviceIdHint,
             icon: Icons.qr_code_2,
             textInputAction: TextInputAction.next,
             validator: _validateDeviceId,
@@ -576,7 +600,7 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
                 });
               },
               icon: const Icon(Icons.refresh),
-              label: const Text('Yeni Demo Cihaz Kimliği Oluştur'),
+              label: Text(t.createNewDemoDeviceId),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
                 shape: RoundedRectangleBorder(
@@ -591,15 +615,17 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildRiskHistorySection() {
+    final t = AppStrings.of(context);
+
     return _buildModernSection(
-      title: 'Risk Geçmişi',
+      title: t.riskHistory,
       child: Column(
         children: [
           _buildRiskSummaryBox(),
           const SizedBox(height: 14),
           _buildRiskSwitch(
-            title: 'Daha önce kalp krizi geçirdi',
-            subtitle: 'Önceki kalp krizi öyküsü',
+            title: t.previousHeartAttackTitle,
+            subtitle: t.previousHeartAttackSubtitle,
             icon: Icons.favorite_border,
             value: previousHeartAttack,
             onChanged: (value) {
@@ -607,8 +633,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             },
           ),
           _buildRiskSwitch(
-            title: 'Kalp hastalığı var',
-            subtitle: 'Tanı almış kalp hastalığı',
+            title: t.heartDiseaseTitle,
+            subtitle: t.heartDiseaseSubtitle,
             icon: Icons.monitor_heart_outlined,
             value: heartDisease,
             onChanged: (value) {
@@ -616,8 +642,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             },
           ),
           _buildRiskSwitch(
-            title: 'Hipertansiyon var',
-            subtitle: 'Yüksek tansiyon öyküsü',
+            title: t.hypertensionTitle,
+            subtitle: t.hypertensionSubtitle,
             icon: Icons.bloodtype_outlined,
             value: hypertension,
             onChanged: (value) {
@@ -625,8 +651,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             },
           ),
           _buildRiskSwitch(
-            title: 'Diyabet var',
-            subtitle: 'Şeker hastalığı öyküsü',
+            title: t.diabetesTitle,
+            subtitle: t.diabetesSubtitle,
             icon: Icons.medical_information_outlined,
             value: diabetes,
             onChanged: (value) {
@@ -634,8 +660,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             },
           ),
           _buildRiskSwitch(
-            title: 'Yüksek kolesterol var',
-            subtitle: 'Kolesterol yüksekliği',
+            title: t.highCholesterolTitle,
+            subtitle: t.highCholesterolSubtitle,
             icon: Icons.health_and_safety_outlined,
             value: highCholesterol,
             onChanged: (value) {
@@ -643,8 +669,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
             },
           ),
           _buildRiskSwitch(
-            title: 'Sigara kullanıyor',
-            subtitle: 'Sigara kullanımı risk faktörüdür',
+            title: t.smokingTitle,
+            subtitle: t.smokingSubtitle,
             icon: Icons.smoking_rooms_outlined,
             value: smoking,
             onChanged: (value) {
@@ -654,8 +680,8 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
           const SizedBox(height: 12),
           _buildTextField(
             controller: _medicationsController,
-            label: 'Kullandığı İlaçlar',
-            hint: 'Örn: Tansiyon ilacı, kan sulandırıcı...',
+            label: t.medicationsLabel,
+            hint: t.medicationsHint,
             icon: Icons.medication_outlined,
             maxLines: 2,
           ),
@@ -665,11 +691,13 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
   }
 
   Widget _buildBottomSaveButton() {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.only(top: 18, bottom: 24),
       child: PrimaryButton(
-        text: _isSaving ? 'Kaydediliyor...' : 'Yakını ve Bilekliği Kaydet',
+        text: _isSaving ? t.savingPerson : t.savePersonAndWearable,
         onPressed: _isSaving ? null : _save,
         icon: Icons.person_add_alt_1,
       ),
@@ -678,10 +706,12 @@ class _AddMonitoredPersonScreenState extends State<AddMonitoredPersonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Yakın / Bileklik Ekle'),
+        title: Text(t.addMonitoredPersonScreenTitle),
         elevation: 0,
       ),
       body: Form(

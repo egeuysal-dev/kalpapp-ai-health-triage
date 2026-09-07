@@ -916,4 +916,176 @@ class AppStrings {
 
     return status;
   }
+
+    // Add Monitored Person Screen
+  String get addMonitoredPersonScreenTitle =>
+      isEnglish ? 'Add Person / Wearable' : 'Yakın / Bileklik Ekle';
+
+  String get addMonitoredPersonHeaderTitle =>
+      isEnglish ? 'Add Person and Wearable' : 'Yakın ve Bileklik Ekle';
+
+  String get addMonitoredPersonHeaderMessage => isEnglish
+      ? 'Create a virtual wearable profile for a family member who may carry heart-related risk.'
+      : 'Kalp hastalığı riski taşıyan yakınınız için sanal bileklik profili oluşturun.';
+
+  String get addMonitoredPersonDemoInfo => isEnglish
+      ? 'In this prototype, a demo device ID is used instead of a physical wearable. In the real product, this ID would be matched with live sensor data from the wearable.'
+      : 'Bu prototipte fiziksel bileklik yerine demo cihaz kimliği kullanılır. Gerçek üründe bu kimlik, bileklikten gelen canlı sensör verileriyle eşleştirilecektir.';
+
+  String get personInformation =>
+      isEnglish ? 'Person Information' : 'Yakın Bilgileri';
+
+  String get fullNameLabel => isEnglish ? 'Full Name' : 'Ad Soyad';
+
+  String get relationLabel =>
+      isEnglish ? 'Relationship' : 'Yakınlık Derecesi';
+
+  String get relationHint =>
+      isEnglish ? 'Example: Grandfather, Mother, Father' : 'Örn: Dede, Anne, Baba';
+
+  String get ageLabel => isEnglish ? 'Age' : 'Yaş';
+
+  String get genderLabel => isEnglish ? 'Gender' : 'Cinsiyet';
+
+  String get male => isEnglish ? 'Male' : 'Erkek';
+
+  String get female => isEnglish ? 'Female' : 'Kadın';
+
+  String get braceletInformation =>
+      isEnglish ? 'Wearable Information' : 'Bileklik Bilgileri';
+
+  String get demoBraceletId =>
+      isEnglish ? 'Demo Wearable ID' : 'Demo Bileklik Kimliği';
+
+  String get createNewDemoDeviceId => isEnglish
+      ? 'Create New Demo Device ID'
+      : 'Yeni Demo Cihaz Kimliği Oluştur';
+
+  String get createNewDeviceIdTooltip => isEnglish
+      ? 'Create new device ID'
+      : 'Yeni cihaz kimliği oluştur';
+
+  String get deviceIdLabel =>
+      isEnglish ? 'Device ID' : 'Cihaz Kimliği';
+
+  String get deviceIdHint =>
+      isEnglish ? 'Example: KAPP-83721' : 'Örn: KAPP-83721';
+
+  String get riskHistory =>
+      isEnglish ? 'Risk History' : 'Risk Geçmişi';
+
+  String get previousHeartAttackTitle => isEnglish
+      ? 'Previous heart attack'
+      : 'Daha önce kalp krizi geçirdi';
+
+  String get previousHeartAttackSubtitle => isEnglish
+      ? 'History of previous heart attack'
+      : 'Önceki kalp krizi öyküsü';
+
+  String get heartDiseaseTitle =>
+      isEnglish ? 'Heart disease' : 'Kalp hastalığı var';
+
+  String get heartDiseaseSubtitle => isEnglish
+      ? 'Diagnosed heart disease'
+      : 'Tanı almış kalp hastalığı';
+
+  String get hypertensionTitle =>
+      isEnglish ? 'Hypertension' : 'Hipertansiyon var';
+
+  String get hypertensionSubtitle =>
+      isEnglish ? 'History of high blood pressure' : 'Yüksek tansiyon öyküsü';
+
+  String get diabetesTitle =>
+      isEnglish ? 'Diabetes' : 'Diyabet var';
+
+  String get diabetesSubtitle =>
+      isEnglish ? 'History of diabetes' : 'Şeker hastalığı öyküsü';
+
+  String get highCholesterolTitle =>
+      isEnglish ? 'High cholesterol' : 'Yüksek kolesterol var';
+
+  String get highCholesterolSubtitle =>
+      isEnglish ? 'History of high cholesterol' : 'Kolesterol yüksekliği';
+
+  String get smokingTitle =>
+      isEnglish ? 'Smoking' : 'Sigara kullanıyor';
+
+  String get smokingSubtitle =>
+      isEnglish ? 'Smoking is a risk factor' : 'Sigara kullanımı risk faktörüdür';
+
+  String get medicationsLabel =>
+      isEnglish ? 'Medications' : 'Kullandığı İlaçlar';
+
+  String get medicationsHint => isEnglish
+      ? 'Example: Blood pressure medication, blood thinner...'
+      : 'Örn: Tansiyon ilacı, kan sulandırıcı...';
+
+  String get savingPerson =>
+      isEnglish ? 'Saving...' : 'Kaydediliyor...';
+
+  String get savePersonAndWearable => isEnglish
+      ? 'Save Person and Wearable'
+      : 'Yakını ve Bilekliği Kaydet';
+
+  String get monitoredPersonAddSuccess => isEnglish
+      ? 'Person and virtual wearable were added successfully.'
+      : 'Yakın ve sanal bileklik başarıyla eklendi.';
+
+  String get monitoredPersonAddError => isEnglish
+      ? 'An error occurred while adding the person.'
+      : 'Yakın eklenirken bir hata oluştu.';
+
+  String get monitoredPersonFormInvalid => isEnglish
+      ? 'Please fix the missing or incorrect fields in the form.'
+      : 'Lütfen formdaki eksik veya hatalı alanları düzeltin.';
+
+  String get monitoredPersonNameRequired => isEnglish
+      ? 'The person name is required.'
+      : 'Yakınınızın adı zorunludur.';
+
+  String get monitoredPersonNameMinLength => isEnglish
+      ? 'Name must be at least 3 characters.'
+      : 'Ad en az 3 karakter olmalıdır.';
+
+  String get monitoredPersonRelationRequired => isEnglish
+      ? 'Relationship is required.'
+      : 'Yakınlık derecesi zorunludur.';
+
+  String get monitoredPersonAgeRequired =>
+      isEnglish ? 'Age is required.' : 'Yaş zorunludur.';
+
+  String get monitoredPersonAgeInvalid =>
+      isEnglish ? 'Please enter a valid age.' : 'Geçerli bir yaş girin.';
+
+  String get monitoredPersonAgeRange => isEnglish
+      ? 'Age must be between 1 and 120.'
+      : 'Yaş 1 ile 120 arasında olmalıdır.';
+
+  String get monitoredPersonDeviceRequired =>
+      isEnglish ? 'Device ID is required.' : 'Cihaz kimliği zorunludur.';
+
+  String get monitoredPersonDeviceTooShort =>
+      isEnglish ? 'Device ID is too short.' : 'Cihaz kimliği çok kısa.';
+
+  String riskProfileSummary({
+    required int riskCount,
+  }) {
+    String message;
+
+    if (riskCount >= 4) {
+      message = isEnglish ? 'High risk profile' : 'Yüksek risk profili';
+    } else if (riskCount >= 2) {
+      message = isEnglish ? 'Moderate risk profile' : 'Orta risk profili';
+    } else if (riskCount == 1) {
+      message = isEnglish ? 'Low/moderate risk profile' : 'Düşük/orta risk profili';
+    } else {
+      message = isEnglish
+          ? 'No clear risk factor selected'
+          : 'Belirgin risk faktörü seçilmedi';
+    }
+
+    return isEnglish
+        ? '$message • Selected risk factors: $riskCount'
+        : '$message • Seçilen risk faktörü: $riskCount';
+  }
 }
