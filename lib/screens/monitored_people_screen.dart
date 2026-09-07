@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/detail_dialogs.dart';
 import '../models/monitored_person.dart';
 import '../services/monitored_person_service.dart';
@@ -14,6 +16,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
     if (status == 'Düşük kalp ritmi uyarısı') return Colors.orange;
     if (status == 'Yüksek kalp ritmi uyarısı') return Colors.deepOrange;
     if (status == 'Normal') return Colors.green;
+
     return Colors.blueGrey;
   }
 
@@ -22,39 +25,34 @@ class MonitoredPeopleScreen extends StatelessWidget {
     if (status == 'Düşük kalp ritmi uyarısı') return Icons.arrow_downward;
     if (status == 'Yüksek kalp ritmi uyarısı') return Icons.arrow_upward;
     if (status == 'Normal') return Icons.check_circle_outline;
-    return Icons.info_outline;
-  }
 
-  String _shortStatus(String status) {
-    if (status == 'Kritik uyarı') return 'Kritik';
-    if (status == 'Düşük kalp ritmi uyarısı') return 'Düşük Ritim';
-    if (status == 'Yüksek kalp ritmi uyarısı') return 'Yüksek Ritim';
-    if (status == 'Normal') return 'Normal';
-    return status;
+    return Icons.info_outline;
   }
 
   Future<void> _deletePerson(
     BuildContext context,
     MonitoredPerson person,
   ) async {
+    final t = AppStrings.of(context);
+
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        title: const Text('Yakını Sil'),
+        title: Text(t.deleteMonitoredPersonTitle),
         content: Text(
-          '${person.fullName} ve bağlı sanal bileklik kaydı silinsin mi?',
+          t.deleteMonitoredPersonMessage(person.fullName),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Vazgeç'),
+            child: Text(t.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sil'),
+            child: Text(t.commonDelete),
           ),
         ],
       ),
@@ -67,8 +65,8 @@ class MonitoredPeopleScreen extends StatelessWidget {
     if (!context.mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Yakın kaydı silindi.'),
+      SnackBar(
+        content: Text(t.monitoredPersonDeleted),
       ),
     );
   }
@@ -84,7 +82,9 @@ class MonitoredPeopleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeaderInfoCard() {
+  Widget _buildHeaderInfoCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
@@ -104,31 +104,31 @@ class MonitoredPeopleScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: const Row(
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.watch_outlined,
             color: Colors.white,
             size: 38,
           ),
-          SizedBox(width: 14),
+          const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Yakın ve Bileklik Takibi',
-                  style: TextStyle(
+                  t.monitoredPeopleHeaderTitle,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 21,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
-                  'Kalp hastalığı riski taşıyan yakınlarınızı sanal bileklik kimliğiyle takip edin. Demo modunda ritim uyarılarını simüle edebilirsiniz.',
-                  style: TextStyle(
+                  t.monitoredPeopleHeaderMessage,
+                  style: const TextStyle(
                     color: Colors.white70,
                     height: 1.4,
                   ),
@@ -158,7 +158,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
           ),
         ],
         border: Border.all(
-          color: color.withOpacity(0.20),
+          color: color.withValues(alpha: 0.20),
         ),
       ),
       child: Column(
@@ -166,13 +166,13 @@ class MonitoredPeopleScreen extends StatelessWidget {
         children: [
           _buildPersonHeader(context, person, color),
           const SizedBox(height: 16),
-          _buildHeartRateStatusPanel(person, color),
+          _buildHeartRateStatusPanel(context, person, color),
           const SizedBox(height: 14),
-          _buildDeviceAndTimeRow(person),
+          _buildDeviceAndTimeRow(context, person),
           const SizedBox(height: 14),
           _buildPrimaryActions(context, person),
           const SizedBox(height: 10),
-          _buildSimulationActions(person),
+          _buildSimulationActions(context, person),
         ],
       ),
     );
@@ -183,13 +183,15 @@ class MonitoredPeopleScreen extends StatelessWidget {
     MonitoredPerson person,
     Color color,
   ) {
+    final t = AppStrings.of(context);
+
     return Row(
       children: [
         Container(
           width: 62,
           height: 62,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.12),
+            color: color.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Icon(
@@ -215,7 +217,11 @@ class MonitoredPeopleScreen extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                '${person.relation} • ${person.age} yaş • ${person.gender}',
+                t.relationAgeGender(
+                  relation: person.relation,
+                  age: person.age,
+                  gender: person.gender,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
@@ -230,24 +236,27 @@ class MonitoredPeopleScreen extends StatelessWidget {
           onPressed: () => _deletePerson(context, person),
           icon: const Icon(Icons.delete_outline),
           color: Colors.red,
-          tooltip: 'Sil',
+          tooltip: t.commonDelete,
         ),
       ],
     );
   }
 
   Widget _buildHeartRateStatusPanel(
+    BuildContext context,
     MonitoredPerson person,
     Color color,
   ) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color.withOpacity(0.20),
+          color: color.withValues(alpha: 0.20),
         ),
       ),
       child: Row(
@@ -255,7 +264,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
           Expanded(
             child: _buildMetricBlock(
               icon: Icons.favorite,
-              label: 'Kalp Ritmi',
+              label: t.heartRate,
               value: '${person.heartRate} bpm',
               color: color,
             ),
@@ -263,13 +272,13 @@ class MonitoredPeopleScreen extends StatelessWidget {
           Container(
             width: 1,
             height: 48,
-            color: color.withOpacity(0.18),
+            color: color.withValues(alpha: 0.18),
           ),
           Expanded(
             child: _buildMetricBlock(
               icon: _statusIcon(person.status),
-              label: 'Durum',
-              value: _shortStatus(person.status),
+              label: t.statusLabel,
+              value: t.shortPersonStatusText(person.status),
               color: color,
             ),
           ),
@@ -324,13 +333,18 @@ class MonitoredPeopleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDeviceAndTimeRow(MonitoredPerson person) {
+  Widget _buildDeviceAndTimeRow(
+    BuildContext context,
+    MonitoredPerson person,
+  ) {
+    final t = AppStrings.of(context);
+
     return Row(
       children: [
         Expanded(
           child: _buildInfoPill(
             icon: Icons.watch_outlined,
-            label: 'Cihaz',
+            label: t.deviceLabel,
             value: person.deviceId,
             color: const Color(0xFF1976D2),
           ),
@@ -339,7 +353,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
         Expanded(
           child: _buildInfoPill(
             icon: Icons.access_time,
-            label: 'Son Ölçüm',
+            label: t.lastMeasurement,
             value: person.lastMeasurement,
             color: Colors.blueGrey,
           ),
@@ -357,10 +371,10 @@ class MonitoredPeopleScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(13),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: color.withOpacity(0.18),
+          color: color.withValues(alpha: 0.18),
         ),
       ),
       child: Row(
@@ -408,6 +422,8 @@ class MonitoredPeopleScreen extends StatelessWidget {
     BuildContext context,
     MonitoredPerson person,
   ) {
+    final t = AppStrings.of(context);
+
     return Row(
       children: [
         Expanded(
@@ -421,7 +437,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
               );
             },
             icon: const Icon(Icons.info_outline),
-            label: const Text('Detay'),
+            label: Text(t.detail),
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 48),
               shape: RoundedRectangleBorder(
@@ -441,7 +457,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
               await _showCriticalAlertDialog(context, person);
             },
             icon: const Icon(Icons.warning_rounded),
-            label: const Text('Kritik'),
+            label: Text(t.critical),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
@@ -456,7 +472,12 @@ class MonitoredPeopleScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSimulationActions(MonitoredPerson person) {
+  Widget _buildSimulationActions(
+    BuildContext context,
+    MonitoredPerson person,
+  ) {
+    final t = AppStrings.of(context);
+
     return Row(
       children: [
         Expanded(
@@ -472,7 +493,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: _buildSmallActionButton(
-            text: 'Düşük',
+            text: t.low,
             icon: Icons.arrow_downward,
             color: Colors.orange,
             onPressed: () {
@@ -483,7 +504,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
         const SizedBox(width: 8),
         Expanded(
           child: _buildSmallActionButton(
-            text: 'Yüksek',
+            text: t.high,
             icon: Icons.arrow_upward,
             color: Colors.deepOrange,
             onPressed: () {
@@ -512,7 +533,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         foregroundColor: color,
         side: BorderSide(
-          color: color.withOpacity(0.55),
+          color: color.withValues(alpha: 0.55),
         ),
         minimumSize: const Size(double.infinity, 44),
         padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -524,6 +545,8 @@ class MonitoredPeopleScreen extends StatelessWidget {
   }
 
   Widget _buildEmptyState(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(28),
@@ -549,19 +572,19 @@ class MonitoredPeopleScreen extends StatelessWidget {
                 color: Colors.black38,
               ),
               const SizedBox(height: 16),
-              const Text(
-                'Henüz takip edilen yakın yok.',
+              Text(
+                t.monitoredPeopleEmptyTitle,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Bir yakınınızı ve ona ait sanal bileklik cihaz kimliğini ekleyerek demo takibe başlayabilirsiniz.',
+              Text(
+                t.monitoredPeopleEmptyMessage,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black54,
                   height: 1.4,
                 ),
@@ -579,7 +602,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.person_add_alt_1),
-                  label: const Text('Yakın Ekle'),
+                  label: Text(t.addMonitoredPerson),
                 ),
               ),
             ],
@@ -609,22 +632,24 @@ class MonitoredPeopleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Takip Ettiklerim'),
+        title: Text(t.monitoredPeople),
         actions: [
           IconButton(
             onPressed: () => _openAlertHistory(context),
             icon: const Icon(Icons.notifications_active_outlined),
-            tooltip: 'Bileklik Uyarı Geçmişi',
+            tooltip: t.braceletAlertHistoryTitle,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openAddPerson(context),
         icon: const Icon(Icons.add),
-        label: const Text('Yakın Ekle'),
+        label: Text(t.addMonitoredPerson),
       ),
       body: StreamBuilder<List<MonitoredPerson>>(
         stream: MonitoredPersonService.monitoredPeopleStream(),
@@ -640,7 +665,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Takip edilen yakınlar yüklenirken hata oluştu:\n${snapshot.error}',
+                  '${t.monitoredPeopleLoadError}:\n${snapshot.error}',
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -656,7 +681,7 @@ class MonitoredPeopleScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.only(bottom: 90),
             children: [
-              _buildHeaderInfoCard(),
+              _buildHeaderInfoCard(context),
               ...people.map(
                 (person) => _buildPersonCard(context, person),
               ),

@@ -838,4 +838,82 @@ class AppStrings {
         return message;
     }
   }
+
+    // Monitored People Screen
+  String get monitoredPeopleHeaderTitle => isEnglish
+      ? 'Family and Wearable Monitoring'
+      : 'Yakın ve Bileklik Takibi';
+
+  String get monitoredPeopleHeaderMessage => isEnglish
+      ? 'Track family members with virtual wearable device IDs. In demo mode, you can simulate rhythm alerts.'
+      : 'Kalp hastalığı riski taşıyan yakınlarınızı sanal bileklik kimliğiyle takip edin. Demo modunda ritim uyarılarını simüle edebilirsiniz.';
+
+  String get addMonitoredPerson =>
+      isEnglish ? 'Add Person' : 'Yakın Ekle';
+
+  String get deleteMonitoredPersonTitle =>
+      isEnglish ? 'Delete Person' : 'Yakını Sil';
+
+  String deleteMonitoredPersonMessage(String fullName) {
+    return isEnglish
+        ? 'Delete $fullName and the connected virtual wearable record?'
+        : '$fullName ve bağlı sanal bileklik kaydı silinsin mi?';
+  }
+
+  String get monitoredPersonDeleted =>
+      isEnglish ? 'Person record deleted.' : 'Yakın kaydı silindi.';
+
+  String get monitoredPeopleLoadError => isEnglish
+      ? 'An error occurred while loading monitored people'
+      : 'Takip edilen yakınlar yüklenirken hata oluştu';
+
+  String get monitoredPeopleEmptyTitle => isEnglish
+      ? 'No monitored person yet.'
+      : 'Henüz takip edilen yakın yok.';
+
+  String get monitoredPeopleEmptyMessage => isEnglish
+      ? 'You can start demo monitoring by adding a family member and a virtual wearable device ID.'
+      : 'Bir yakınınızı ve ona ait sanal bileklik cihaz kimliğini ekleyerek demo takibe başlayabilirsiniz.';
+
+  String get statusLabel => isEnglish ? 'Status' : 'Durum';
+
+  String get deviceLabel => isEnglish ? 'Device' : 'Cihaz';
+
+  String get detail => isEnglish ? 'Detail' : 'Detay';
+
+  String get critical => isEnglish ? 'Critical' : 'Kritik';
+
+  String get low => isEnglish ? 'Low' : 'Düşük';
+
+  String get high => isEnglish ? 'High' : 'Yüksek';
+
+  String relationAgeGender({
+    required String relation,
+    required int age,
+    required String gender,
+  }) {
+    final displayedGender = genderText(gender);
+
+    return isEnglish
+        ? '$relation • $age years old • $displayedGender'
+        : '$relation • $age yaş • $displayedGender';
+  }
+
+  String shortPersonStatusText(String status) {
+    if (!isEnglish) {
+      if (status == 'Kritik uyarı') return 'Kritik';
+      if (status == 'Düşük kalp ritmi uyarısı') return 'Düşük Ritim';
+      if (status == 'Yüksek kalp ritmi uyarısı') return 'Yüksek Ritim';
+      if (status == 'Normal') return 'Normal';
+
+      return status;
+    }
+
+    if (status == 'Kritik uyarı') return 'Critical';
+    if (status == 'Düşük kalp ritmi uyarısı') return 'Low Rhythm';
+    if (status == 'Yüksek kalp ritmi uyarısı') return 'High Rhythm';
+    if (status == 'Normal') return 'Normal';
+
+    return status;
+  }
 }
