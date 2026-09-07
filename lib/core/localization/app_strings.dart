@@ -1488,4 +1488,49 @@ class AppStrings {
           'Explicit consent, data security, and retention policies should be evaluated separately, especially for health data and family monitoring data belonging to third parties.'
       : 'Bu metin geliştirme aşaması için hazırlanmış taslak bilgilendirmedir. Uygulama gerçek kullanıma açılmadan önce hukuki danışmanlık alınarak KVKK, gizlilik politikası, açık rıza metni ve kullanım şartları profesyonel şekilde hazırlanmalıdır.\n\n'
           'Özellikle sağlık verileri ve üçüncü kişilere ait yakın takip verileri için açık rıza, veri güvenliği ve saklama politikaları ayrıca değerlendirilmelidir.';
+
+            // Detail Dialogs
+  String get commonClose => isEnglish ? 'Close' : 'Kapat';
+
+  String get generalInformation =>
+      isEnglish ? 'General Information' : 'Genel Bilgiler';
+
+  String get basicInformation =>
+      isEnglish ? 'Basic Information' : 'Temel Bilgiler';
+
+  String get healthStatus =>
+      isEnglish ? 'Health Status' : 'Sağlık Durumu';
+
+  String get medicationInformation =>
+      isEnglish ? 'Medication Information' : 'İlaç Bilgisi';
+
+  String get emergencyContactCommunication =>
+      isEnglish ? 'Emergency Contact' : 'Acil Durum İletişimi';
+
+  String get braceletCriticalAlertTitle =>
+      isEnglish ? 'Wearable Alert' : 'Bileklik Uyarısı';
+
+  String get criticalHeartRhythmSimulation => isEnglish
+      ? 'Critical heart rhythm simulation'
+      : 'Kritik kalp ritmi simülasyonu';
+
+  String get alertInformation =>
+      isEnglish ? 'Alert Information' : 'Uyarı Bilgisi';
+
+  String get personLabel => isEnglish ? 'Person' : 'Kişi';
+
+  String get alertType => isEnglish ? 'Alert Type' : 'Uyarı Tipi';
+
+  String get description => isEnglish ? 'Description' : 'Açıklama';
+
+  String get criticalAlertSavedInfo => isEnglish
+      ? 'This event was saved to the Wearable Alert History screen. In the real product, an instant notification would be sent to the user and the monitored person would be checked.'
+      : 'Bu olay Bileklik Uyarı Geçmişi ekranına kaydedildi. Gerçek üründe bu durumda kullanıcıya anlık bildirim gönderilir ve takip edilen kişinin durumu kontrol edilir.';
+
+  String get emergencyNote =>
+      isEnglish ? 'Emergency Note' : 'Acil Durum Notu';
+
+  String get criticalRhythmEmergencyNote => isEnglish
+      ? 'A critical rhythm alert alone does not mean a definitive diagnosis. However, if there is loss of consciousness, chest pain, shortness of breath, or serious worsening, 112 should be called.'
+      : 'Kritik ritim uyarısı tek başına kesin tanı anlamına gelmez. Ancak bilinç kaybı, göğüs ağrısı, nefes darlığı veya ciddi kötüleşme varsa 112 aranmalıdır.';
 }

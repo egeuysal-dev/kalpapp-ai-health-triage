@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+
 import '../../models/assessment_result.dart';
 import '../../models/user_profile.dart';
+import '../localization/app_strings.dart';
 
 Future<void> showAssessmentDetailDialog(
   BuildContext context,
   AssessmentResult result,
 ) async {
+  final t = AppStrings.of(context);
   final color = _assessmentColor(result.riskLevel);
 
   await showDialog(
@@ -13,30 +16,33 @@ Future<void> showAssessmentDetailDialog(
     builder: (_) => _ModernInfoDialog(
       accentColor: color,
       icon: Icons.assignment_turned_in_rounded,
-      title: result.riskLevel,
-      subtitle: 'Risk skoru: ${result.riskScore}',
+      title: t.riskLevelText(result.riskLevel),
+      subtitle: t.riskScoreValue(result.riskScore),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _InfoSection(
-            title: 'Genel Bilgiler',
+            title: t.generalInformation,
             child: Column(
               children: [
-                _InfoRow(label: 'Risk Skoru', value: '${result.riskScore}'),
                 _InfoRow(
-                  label: 'Aksiyon Seviyesi',
+                  label: t.riskScore,
+                  value: '${result.riskScore}',
+                ),
+                _InfoRow(
+                  label: t.actionLevel,
                   value: result.actionLevel.isEmpty
-                      ? 'Belirtilmedi'
-                      : result.actionLevel,
+                      ? t.notSpecified
+                      : t.actionLevelText(result.actionLevel),
                 ),
                 _InfoRow(
-                  label: 'Analiz Kaynağı',
+                  label: t.analysisSourcePrefix,
                   value: result.analysisSource.isEmpty
-                      ? 'Belirtilmedi'
-                      : result.analysisSource,
+                      ? t.notSpecified
+                      : t.analysisSourceDisplay(result.analysisSource),
                 ),
                 _InfoRow(
-                  label: 'Tarih',
+                  label: t.dateLabel,
                   value: result.createdAt,
                   isLast: true,
                 ),
@@ -45,10 +51,10 @@ Future<void> showAssessmentDetailDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Semptom Özeti',
+            title: t.symptomSummaryTitle,
             child: Text(
               result.symptomSummary.isEmpty
-                  ? 'Semptom özeti bulunmuyor.'
+                  ? t.noSymptomSummary
                   : result.symptomSummary,
               style: const TextStyle(
                 height: 1.5,
@@ -58,11 +64,11 @@ Future<void> showAssessmentDetailDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Risk Nedenleri',
+            title: t.riskReasonsTitle,
             child: result.riskReasons.isEmpty
-                ? const Text(
-                    'Belirtilmedi.',
-                    style: TextStyle(
+                ? Text(
+                    t.noRiskReason,
+                    style: const TextStyle(
                       height: 1.5,
                       color: Colors.black87,
                     ),
@@ -70,28 +76,30 @@ Future<void> showAssessmentDetailDialog(
                 : Column(
                     children: result.riskReasons
                         .map(
-                          (reason) => _ReasonTile(text: reason),
+                          (reason) => _ReasonTile(
+                            text: t.riskReasonText(reason),
+                          ),
                         )
                         .toList(),
                   ),
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Sonuç Mesajı',
+            title: t.resultMessageTitle,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.08),
+                color: color.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: color.withOpacity(0.20),
+                  color: color.withValues(alpha: 0.20),
                 ),
               ),
               child: Text(
                 result.resultMessage.isEmpty
-                    ? 'Sonuç mesajı bulunmuyor.'
-                    : result.resultMessage,
+                    ? t.noResultMessage
+                    : t.resultMessageText(result.resultMessage),
                 style: const TextStyle(
                   height: 1.5,
                   color: Colors.black87,
@@ -110,25 +118,33 @@ Future<void> showProfileSummaryDialog(
   BuildContext context,
   UserProfile profile,
 ) async {
+  final t = AppStrings.of(context);
+
   await showDialog(
     context: context,
     builder: (_) => _ModernInfoDialog(
       accentColor: const Color(0xFF3949AB),
       icon: Icons.person_rounded,
-      title: 'Profil Özeti',
+      title: t.profileSummary,
       subtitle: profile.fullName,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _InfoSection(
-            title: 'Temel Bilgiler',
+            title: t.basicInformation,
             child: Column(
               children: [
-                _InfoRow(label: 'Ad Soyad', value: profile.fullName),
-                _InfoRow(label: 'Yaş', value: '${profile.age}'),
                 _InfoRow(
-                  label: 'Cinsiyet',
-                  value: profile.gender,
+                  label: t.fullNameLabel,
+                  value: profile.fullName,
+                ),
+                _InfoRow(
+                  label: t.ageLabel,
+                  value: '${profile.age}',
+                ),
+                _InfoRow(
+                  label: t.genderLabel,
+                  value: t.genderText(profile.gender),
                   isLast: true,
                 ),
               ],
@@ -136,33 +152,33 @@ Future<void> showProfileSummaryDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Sağlık Durumu',
+            title: t.healthStatus,
             child: Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
                 _StatusChip(
-                  label: 'Önceki Kalp Krizi',
+                  label: t.riskFactorLabel('Önceki Kalp Krizi'),
                   value: profile.previousHeartAttack,
                 ),
                 _StatusChip(
-                  label: 'Kalp Hastalığı',
+                  label: t.riskFactorLabel('Kalp Hastalığı'),
                   value: profile.heartDisease,
                 ),
                 _StatusChip(
-                  label: 'Hipertansiyon',
+                  label: t.riskFactorLabel('Hipertansiyon'),
                   value: profile.hypertension,
                 ),
                 _StatusChip(
-                  label: 'Diyabet',
+                  label: t.riskFactorLabel('Diyabet'),
                   value: profile.diabetes,
                 ),
                 _StatusChip(
-                  label: 'Yüksek Kolesterol',
+                  label: t.riskFactorLabel('Yüksek Kolesterol'),
                   value: profile.highCholesterol,
                 ),
                 _StatusChip(
-                  label: 'Sigara',
+                  label: t.riskFactorLabel('Sigara'),
                   value: profile.smoking,
                 ),
               ],
@@ -170,11 +186,9 @@ Future<void> showProfileSummaryDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'İlaç Bilgisi',
+            title: t.medicationInformation,
             child: Text(
-              profile.medications.isEmpty
-                  ? 'Belirtilmedi'
-                  : profile.medications,
+              profile.medications.isEmpty ? t.notSpecified : profile.medications,
               style: const TextStyle(
                 height: 1.5,
                 color: Colors.black87,
@@ -183,25 +197,25 @@ Future<void> showProfileSummaryDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Acil Durum İletişimi',
+            title: t.emergencyContactCommunication,
             child: Column(
               children: [
                 _InfoRow(
-                  label: 'Acil Kişi',
+                  label: t.emergencyContact,
                   value: profile.emergencyContactName.isEmpty
-                      ? 'Belirtilmedi'
+                      ? t.notSpecified
                       : profile.emergencyContactName,
                 ),
                 _InfoRow(
-                  label: 'Telefon',
+                  label: t.phoneNumber,
                   value: profile.emergencyContactPhone.isEmpty
-                      ? 'Belirtilmedi'
+                      ? t.notSpecified
                       : profile.emergencyContactPhone,
                 ),
                 _InfoRow(
-                  label: 'Yakınlık',
+                  label: t.relationLabel,
                   value: profile.emergencyContactRelation.isEmpty
-                      ? 'Belirtilmedi'
+                      ? t.notSpecified
                       : profile.emergencyContactRelation,
                   isLast: true,
                 ),
@@ -219,30 +233,32 @@ Future<void> showBraceletCriticalAlertDialog(
   required String personName,
   required int heartRate,
 }) async {
+  final t = AppStrings.of(context);
+
   await showDialog(
     context: context,
     builder: (_) => _ModernInfoDialog(
       accentColor: Colors.red,
       icon: Icons.warning_rounded,
-      title: 'Bileklik Uyarısı',
-      subtitle: 'Kritik kalp ritmi simülasyonu',
+      title: t.braceletCriticalAlertTitle,
+      subtitle: t.criticalHeartRhythmSimulation,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _InfoSection(
-            title: 'Uyarı Bilgisi',
+            title: t.alertInformation,
             child: Column(
               children: [
                 _InfoRow(
-                  label: 'Kişi',
+                  label: t.personLabel,
                   value: personName,
                 ),
                 _InfoRow(
-                  label: 'Uyarı Tipi',
-                  value: 'Kritik uyarı',
+                  label: t.alertType,
+                  value: t.braceletStatusText('Kritik uyarı'),
                 ),
                 _InfoRow(
-                  label: 'Kalp Ritmi',
+                  label: t.heartRate,
                   value: '$heartRate bpm',
                   isLast: true,
                 ),
@@ -251,20 +267,20 @@ Future<void> showBraceletCriticalAlertDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Açıklama',
+            title: t.description,
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.08),
+                color: Colors.red.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.red.withOpacity(0.20),
+                  color: Colors.red.withValues(alpha: 0.20),
                 ),
               ),
-              child: const Text(
-                'Bu olay Bileklik Uyarı Geçmişi ekranına kaydedildi. Gerçek üründe bu durumda kullanıcıya anlık bildirim gönderilir ve takip edilen kişinin durumu kontrol edilir.',
-                style: TextStyle(
+              child: Text(
+                t.criticalAlertSavedInfo,
+                style: const TextStyle(
                   height: 1.5,
                   color: Colors.black87,
                   fontWeight: FontWeight.w600,
@@ -274,10 +290,10 @@ Future<void> showBraceletCriticalAlertDialog(
           ),
           const SizedBox(height: 14),
           _InfoSection(
-            title: 'Acil Durum Notu',
-            child: const Text(
-              'Kritik ritim uyarısı tek başına kesin tanı anlamına gelmez. Ancak bilinç kaybı, göğüs ağrısı, nefes darlığı veya ciddi kötüleşme varsa 112 aranmalıdır.',
-              style: TextStyle(
+            title: t.emergencyNote,
+            child: Text(
+              t.criticalRhythmEmergencyNote,
+              style: const TextStyle(
                 height: 1.5,
                 color: Colors.black87,
                 fontWeight: FontWeight.w600,
@@ -294,6 +310,7 @@ Color _assessmentColor(String level) {
   if (level == 'Kritik Risk') return Colors.red;
   if (level == 'Yüksek Risk') return Colors.orange;
   if (level == 'Orta Risk') return Colors.amber.shade700;
+
   return Colors.green;
 }
 
@@ -314,6 +331,8 @@ class _ModernInfoDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Dialog(
       backgroundColor: Colors.transparent,
       insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -350,7 +369,7 @@ class _ModernInfoDialog extends StatelessWidget {
                     width: 52,
                     height: 52,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.18),
+                      color: Colors.white.withValues(alpha: 0.18),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
@@ -406,7 +425,7 @@ class _ModernInfoDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
-                  child: const Text('Kapat'),
+                  child: Text(t.commonClose),
                 ),
               ),
             ),
@@ -568,6 +587,8 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     final bgColor =
         value ? const Color(0xFFFFEBEE) : const Color(0xFFE8F5E9);
 
@@ -580,11 +601,11 @@ class _StatusChip extends StatelessWidget {
         color: bgColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: textColor.withOpacity(0.18),
+          color: textColor.withValues(alpha: 0.18),
         ),
       ),
       child: Text(
-        '$label: ${value ? "Evet" : "Hayır"}',
+        '$label: ${value ? t.yes : t.no}',
         style: TextStyle(
           color: textColor,
           fontWeight: FontWeight.w700,
