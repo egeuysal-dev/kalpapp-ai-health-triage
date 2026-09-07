@@ -1153,4 +1153,86 @@ class AppStrings {
         return label;
     }
   }
+
+      // Profile Screen
+  String get createProfile =>
+      isEnglish ? 'Create Profile' : 'Profil Oluştur';
+
+  String get editProfileTitle =>
+      isEnglish ? 'Edit Profile' : 'Profili Düzenle';
+
+  String get personalInformation =>
+      isEnglish ? 'Personal Information' : 'Kişisel Bilgiler';
+
+  String get healthHistory =>
+      isEnglish ? 'Health History' : 'Sağlık Geçmişi';
+
+  String get emergencyContactInformation =>
+      isEnglish ? 'Emergency Contact Information' : 'Acil Kişi Bilgileri';
+
+  String get profileNameRequired =>
+      isEnglish ? 'Full name is required.' : 'Ad soyad zorunludur.';
+
+  String get profileNameMinLength => isEnglish
+      ? 'Full name must be at least 3 characters.'
+      : 'Ad soyad en az 3 karakter olmalıdır.';
+
+  String get profileAgeRequired =>
+      isEnglish ? 'Age is required.' : 'Yaş zorunludur.';
+
+  String get profileAgeInvalid =>
+      isEnglish ? 'Please enter a valid age.' : 'Geçerli bir yaş girin.';
+
+  String get profileAgeRange => isEnglish
+      ? 'Age must be between 1 and 120.'
+      : 'Yaş 1 ile 120 arasında olmalıdır.';
+
+  String get emergencyPhoneTooShort => isEnglish
+      ? 'The phone number looks too short.'
+      : 'Telefon numarası çok kısa görünüyor.';
+
+  String get profileFormInvalid => isEnglish
+      ? 'Please fix the errors in the form.'
+      : 'Lütfen formdaki hataları düzeltin.';
+
+  String get profileSaveError => isEnglish
+      ? 'An error occurred while saving the profile.'
+      : 'Profil kaydedilirken bir hata oluştu.';
+
+  String get previousHeartAttackPersonal =>
+      isEnglish ? 'I had a previous heart attack' : 'Daha önce kalp krizi geçirdim';
+
+  String get heartDiseasePersonal =>
+      isEnglish ? 'I have heart disease' : 'Kalp hastalığım var';
+
+  String get hypertensionPersonal =>
+      isEnglish ? 'I have hypertension' : 'Hipertansiyonum var';
+
+  String get diabetesPersonal =>
+      isEnglish ? 'I have diabetes' : 'Diyabetim var';
+
+  String get highCholesterolPersonal =>
+      isEnglish ? 'I have high cholesterol' : 'Kolesterol yüksekliğim var';
+
+  String get smokingPersonal =>
+      isEnglish ? 'I smoke' : 'Sigara kullanıyorum';
+
+  String get medicationsPersonalLabel =>
+      isEnglish ? 'Medications you use' : 'Kullandığınız ilaçlar';
+
+  String get emergencyContactName =>
+      isEnglish ? 'Emergency Contact Name' : 'Acil Kişi Adı';
+
+  String get phoneNumber =>
+      isEnglish ? 'Phone Number' : 'Telefon Numarası';
+
+  String get emergencyRelationHint => isEnglish
+      ? 'Relationship, such as mother or friend'
+      : 'Yakınlık (Anne, Arkadaş vs.)';
+
+  String get saveChanges =>
+      isEnglish ? 'Save Changes' : 'Değişiklikleri Kaydet';
+
+  String get saveProfile =>
+      isEnglish ? 'Save Profile' : 'Profili Kaydet';
 }
