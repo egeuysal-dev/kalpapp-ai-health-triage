@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/primary_button.dart';
 import '../core/widgets/section_card.dart';
 import '../services/firebase_auth_service.dart';
@@ -30,53 +32,56 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   String? _validateEmail(String? value) {
+    final t = AppStrings.of(context);
     final email = value?.trim() ?? '';
 
     if (email.isEmpty) {
-      return 'E-posta zorunludur.';
+      return t.emailRequired;
     }
 
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
     if (!emailRegex.hasMatch(email)) {
-      return 'Geçerli bir e-posta girin.';
+      return t.validEmailRequired;
     }
 
     return null;
   }
 
   String? _validatePassword(String? value) {
+    final t = AppStrings.of(context);
     final password = value?.trim() ?? '';
 
     if (password.isEmpty) {
-      return 'Şifre zorunludur.';
+      return t.passwordRequired;
     }
 
     if (password.length < 6) {
-      return 'Şifre en az 6 karakter olmalıdır.';
+      return t.passwordMinLength;
     }
 
     if (!RegExp(r'[A-Za-z]').hasMatch(password)) {
-      return 'Şifre en az bir harf içermelidir.';
+      return t.passwordMustContainLetter;
     }
 
     if (!RegExp(r'[0-9]').hasMatch(password)) {
-      return 'Şifre en az bir rakam içermelidir.';
+      return t.passwordMustContainNumber;
     }
 
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
+    final t = AppStrings.of(context);
     final confirmPassword = value?.trim() ?? '';
     final password = _passwordController.text.trim();
 
     if (confirmPassword.isEmpty) {
-      return 'Şifre tekrar zorunludur.';
+      return t.confirmPasswordRequired;
     }
 
     if (confirmPassword != password) {
-      return 'Şifreler eşleşmiyor.';
+      return t.passwordsDoNotMatch;
     }
 
     return null;
@@ -89,6 +94,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
+    final t = AppStrings.of(context);
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
@@ -111,8 +117,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Kayıt başarılı. Şimdi giriş yapabilirsiniz.'),
+      SnackBar(
+        content: Text(t.registerSuccess),
       ),
     );
 
@@ -121,17 +127,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       appBar: AppBar(
-        title: const Text('Hesap Oluştur'),
+        title: Text(t.createAccount),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
             SectionCard(
-              title: 'Kayıt Bilgileri',
+              title: t.registerInfoTitle,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -141,8 +149,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       validator: _validateEmail,
-                      decoration: const InputDecoration(
-                        labelText: 'E-posta',
+                      decoration: InputDecoration(
+                        labelText: t.emailLabel,
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -152,8 +160,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       textInputAction: TextInputAction.next,
                       validator: _validatePassword,
                       decoration: InputDecoration(
-                        labelText: 'Şifre',
-                        helperText: 'En az 6 karakter, harf ve rakam içermeli',
+                        labelText: t.passwordLabel,
+                        helperText: t.passwordHelperText,
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -176,7 +184,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       validator: _validateConfirmPassword,
                       onFieldSubmitted: (_) => _register(),
                       decoration: InputDecoration(
-                        labelText: 'Şifre Tekrar',
+                        labelText: t.confirmPasswordLabel,
                         suffixIcon: IconButton(
                           onPressed: () {
                             setState(() {
@@ -194,9 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 18),
                     PrimaryButton(
-                      text: _isLoading
-                          ? 'Kayıt Oluşturuluyor...'
-                          : 'Kayıt Ol',
+                      text: _isLoading ? t.creatingAccount : t.register,
                       onPressed: _isLoading ? null : _register,
                     ),
                   ],

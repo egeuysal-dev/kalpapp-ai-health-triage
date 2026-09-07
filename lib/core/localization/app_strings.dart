@@ -16,11 +16,77 @@ class AppStrings {
 
   String get appName => 'KalpAPP';
 
+  // Common
   String get commonCancel => isEnglish ? 'Cancel' : 'Vazgeç';
   String get commonDelete => isEnglish ? 'Delete' : 'Sil';
+  String get commonSend => isEnglish ? 'Send' : 'Gönder';
   String get commonUnknown => isEnglish ? 'Unknown' : 'Bilinmiyor';
   String get commonError => isEnglish ? 'An error occurred.' : 'Bir hata oluştu.';
 
+  // Validation
+  String get emailRequired => isEnglish ? 'Email is required.' : 'E-posta zorunludur.';
+  String get validEmailRequired =>
+      isEnglish ? 'Please enter a valid email address.' : 'Geçerli bir e-posta girin.';
+
+  String get passwordRequired => isEnglish ? 'Password is required.' : 'Şifre zorunludur.';
+  String get passwordMinLength =>
+      isEnglish ? 'Password must be at least 6 characters.' : 'Şifre en az 6 karakter olmalıdır.';
+  String get passwordMustContainLetter =>
+      isEnglish ? 'Password must contain at least one letter.' : 'Şifre en az bir harf içermelidir.';
+  String get passwordMustContainNumber =>
+      isEnglish ? 'Password must contain at least one number.' : 'Şifre en az bir rakam içermelidir.';
+
+  String get confirmPasswordRequired =>
+      isEnglish ? 'Password confirmation is required.' : 'Şifre tekrar zorunludur.';
+  String get passwordsDoNotMatch =>
+      isEnglish ? 'Passwords do not match.' : 'Şifreler eşleşmiyor.';
+
+  // Login
+  String get loginSubtitle =>
+      isEnglish ? 'Sign in to continue' : 'Devam etmek için giriş yapın';
+  String get loginInfoTitle => isEnglish ? 'Login Information' : 'Giriş Bilgileri';
+  String get emailLabel => isEnglish ? 'Email' : 'E-posta';
+  String get passwordLabel => isEnglish ? 'Password' : 'Şifre';
+  String get forgotPassword => isEnglish ? 'Forgot Password?' : 'Şifremi Unuttum';
+  String get sending => isEnglish ? 'Sending...' : 'Gönderiliyor...';
+  String get signingIn => isEnglish ? 'Signing In...' : 'Giriş Yapılıyor...';
+  String get signIn => isEnglish ? 'Sign In' : 'Giriş Yap';
+  String get noAccountRegister =>
+      isEnglish ? "Don't have an account? Register" : 'Hesabın yok mu? Kayıt ol';
+
+  String get resetPasswordEmailRequired => isEnglish
+      ? 'Enter your email address to reset your password.'
+      : 'Şifre sıfırlamak için e-posta adresinizi girin.';
+
+  String get resetPasswordTitle =>
+      isEnglish ? 'Password Reset' : 'Şifre Sıfırlama';
+
+  String resetPasswordConfirmMessage(String email) {
+    return isEnglish
+        ? 'Send a password reset link to $email?'
+        : '$email adresine şifre sıfırlama bağlantısı gönderilsin mi?';
+  }
+
+  String get resetPasswordSent => isEnglish
+      ? 'Password reset link has been sent to your email address.'
+      : 'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.';
+
+  // Register
+  String get createAccount => isEnglish ? 'Create Account' : 'Hesap Oluştur';
+  String get registerInfoTitle => isEnglish ? 'Registration Information' : 'Kayıt Bilgileri';
+  String get passwordHelperText => isEnglish
+      ? 'At least 6 characters, must include letters and numbers'
+      : 'En az 6 karakter, harf ve rakam içermeli';
+  String get confirmPasswordLabel =>
+      isEnglish ? 'Confirm Password' : 'Şifre Tekrar';
+  String get creatingAccount =>
+      isEnglish ? 'Creating Account...' : 'Kayıt Oluşturuluyor...';
+  String get register => isEnglish ? 'Register' : 'Kayıt Ol';
+  String get registerSuccess => isEnglish
+      ? 'Registration successful. You can now sign in.'
+      : 'Kayıt başarılı. Şimdi giriş yapabilirsiniz.';
+
+  // Account Settings
   String get accountAndSecurity =>
       isEnglish ? 'Account and Security' : 'Hesap ve Güvenlik';
 

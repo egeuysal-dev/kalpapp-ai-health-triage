@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/primary_button.dart';
 import '../core/widgets/section_card.dart';
 import '../services/firebase_auth_service.dart';
@@ -32,26 +34,28 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   String? _validateEmail(String? value) {
+    final t = AppStrings.of(context);
     final email = value?.trim() ?? '';
 
     if (email.isEmpty) {
-      return 'E-posta zorunludur.';
+      return t.emailRequired;
     }
 
     final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
     if (!emailRegex.hasMatch(email)) {
-      return 'Geçerli bir e-posta girin.';
+      return t.validEmailRequired;
     }
 
     return null;
   }
 
   String? _validatePassword(String? value) {
+    final t = AppStrings.of(context);
     final password = value?.trim() ?? '';
 
     if (password.isEmpty) {
-      return 'Şifre zorunludur.';
+      return t.passwordRequired;
     }
 
     return null;
@@ -111,18 +115,20 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _forgotPassword() async {
     FocusScope.of(context).unfocus();
 
+    final t = AppStrings.of(context);
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Şifre sıfırlamak için e-posta adresinizi girin.'),
+        SnackBar(
+          content: Text(t.resetPasswordEmailRequired),
         ),
       );
       return;
     }
 
     final emailError = _validateEmail(email);
+
     if (emailError != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(emailError)),
@@ -133,23 +139,24 @@ class _LoginScreenState extends State<LoginScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Şifre Sıfırlama'),
+        title: Text(t.resetPasswordTitle),
         content: Text(
-          '$email adresine şifre sıfırlama bağlantısı gönderilsin mi?',
+          t.resetPasswordConfirmMessage(email),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Vazgeç'),
+            child: Text(t.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Gönder'),
+            child: Text(t.commonSend),
           ),
         ],
       ),
     );
 
+    if (!mounted) return;
     if (confirm != true) return;
 
     setState(() => _isResetSending = true);
@@ -170,16 +177,16 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi.',
-        ),
+      SnackBar(
+        content: Text(t.resetPasswordSent),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       body: SafeArea(
@@ -207,24 +214,24 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  'KalpAPP',
-                  style: TextStyle(
+                Text(
+                  t.appName,
+                  style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  'Devam etmek için giriş yapın',
-                  style: TextStyle(
+                Text(
+                  t.loginSubtitle,
+                  style: const TextStyle(
                     color: Colors.black54,
                     fontSize: 15,
                   ),
                 ),
                 const SizedBox(height: 24),
                 SectionCard(
-                  title: 'Giriş Bilgileri',
+                  title: t.loginInfoTitle,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -234,8 +241,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: _validateEmail,
-                          decoration: const InputDecoration(
-                            labelText: 'E-posta',
+                          decoration: InputDecoration(
+                            labelText: t.emailLabel,
                           ),
                         ),
                         const SizedBox(height: 14),
@@ -246,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: _validatePassword,
                           onFieldSubmitted: (_) => _login(),
                           decoration: InputDecoration(
-                            labelText: 'Şifre',
+                            labelText: t.passwordLabel,
                             suffixIcon: IconButton(
                               onPressed: () {
                                 setState(() {
@@ -269,14 +276,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 _isResetSending ? null : _forgotPassword,
                             child: Text(
                               _isResetSending
-                                  ? 'Gönderiliyor...'
-                                  : 'Şifremi Unuttum',
+                                  ? t.sending
+                                  : t.forgotPassword,
                             ),
                           ),
                         ),
                         const SizedBox(height: 10),
                         PrimaryButton(
-                          text: _isLoading ? 'Giriş Yapılıyor...' : 'Giriş Yap',
+                          text: _isLoading ? t.signingIn : t.signIn,
                           onPressed: _isLoading ? null : _login,
                         ),
                         const SizedBox(height: 10),
@@ -291,7 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                   );
                                 },
-                          child: const Text('Hesabın yok mu? Kayıt ol'),
+                          child: Text(t.noAccountRegister),
                         ),
                       ],
                     ),
