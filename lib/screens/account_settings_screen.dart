@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_language.dart';
+import '../core/localization/app_language_controller.dart';
+import '../core/localization/app_strings.dart';
 import '../core/widgets/primary_button.dart';
 import '../core/widgets/section_card.dart';
 import '../services/firebase_auth_service.dart';
@@ -20,6 +24,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     required String message,
     required String confirmText,
   }) async {
+    final t = AppStrings.of(context);
+
     final result = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
@@ -28,7 +34,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Vazgeç'),
+            child: Text(t.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
@@ -41,11 +47,25 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return result == true;
   }
 
+  Future<void> _changeLanguage(AppLanguage language) async {
+    await LanguageScope.of(context).setLanguage(language);
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppStrings.of(context).languageChanged),
+      ),
+    );
+  }
+
   Future<void> _clearHistory() async {
+    final t = AppStrings.of(context);
+
     final confirm = await _confirm(
-      title: 'Geçmişi Sil',
-      message: 'Tüm değerlendirme geçmişiniz silinsin mi?',
-      confirmText: 'Sil',
+      title: t.clearHistoryDialogTitle,
+      message: t.clearHistoryDialogMessage,
+      confirmText: t.commonDelete,
     );
 
     if (!confirm) return;
@@ -58,16 +78,16 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Değerlendirme geçmişi silindi.'),
+        SnackBar(
+          content: Text(t.historyCleared),
         ),
       );
     } catch (_) {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Geçmiş silinirken bir hata oluştu.'),
+        SnackBar(
+          content: Text(t.historyClearError),
         ),
       );
     } finally {
@@ -78,11 +98,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Future<void> _deleteProfileData() async {
+    final t = AppStrings.of(context);
+
     final confirm = await _confirm(
-      title: 'Profil Verilerini Sil',
-      message:
-          'Profil bilgileriniz ve değerlendirme geçmişiniz silinsin mi? Hesabınız silinmez, sadece verileriniz temizlenir.',
-      confirmText: 'Verileri Sil',
+      title: t.deleteProfileDataDialogTitle,
+      message: t.deleteProfileDataDialogMessage,
+      confirmText: t.deleteProfileDataConfirm,
     );
 
     if (!confirm) return;
@@ -95,8 +116,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profil ve geçmiş verileri silindi.'),
+        SnackBar(
+          content: Text(t.profileDataDeleted),
         ),
       );
 
@@ -109,8 +130,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Veriler silinirken bir hata oluştu.'),
+        SnackBar(
+          content: Text(t.profileDataDeleteError),
         ),
       );
     } finally {
@@ -121,11 +142,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Future<void> _deleteAccountCompletely() async {
+    final t = AppStrings.of(context);
+
     final confirm = await _confirm(
-      title: 'Hesabı Kalıcı Olarak Sil',
-      message:
-          'Bu işlem hesabınızı ve tüm uygulama verilerinizi siler. Bu işlem geri alınamaz.',
-      confirmText: 'Hesabımı Sil',
+      title: t.deleteAccountDialogTitle,
+      message: t.deleteAccountDialogMessage,
+      confirmText: t.deleteAccountConfirm,
     );
 
     if (!confirm) return;
@@ -160,8 +182,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Hesabınız silindi.'),
+        SnackBar(
+          content: Text(t.accountDeleted),
         ),
       );
 
@@ -174,8 +196,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Hesap silinirken bir hata oluştu.'),
+        SnackBar(
+          content: Text(t.accountDeleteError),
         ),
       );
     } finally {
@@ -199,24 +221,26 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final email = FirebaseAuthService.currentUserEmail ?? 'Bilinmiyor';
+    final t = AppStrings.of(context);
+    final languageController = LanguageScope.of(context);
+    final email = FirebaseAuthService.currentUserEmail ?? t.commonUnknown;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hesap ve Güvenlik'),
+        title: Text(t.accountAndSecurity),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             SectionCard(
-              title: 'Hesap Bilgileri',
+              title: t.accountInfo,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Giriş yapılan e-posta',
-                    style: TextStyle(
+                  Text(
+                    t.signedInEmail,
+                    style: const TextStyle(
                       color: Colors.black54,
                     ),
                   ),
@@ -232,14 +256,51 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
             ),
             SectionCard(
-              title: 'Veri Yönetimi',
+              title: t.languageTitle,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    t.languageSubtitle,
+                    style: const TextStyle(
+                      color: Colors.black54,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  _LanguageOptionTile(
+                    title: t.turkish,
+                    subtitle: 'Türkçe arayüz',
+                    isSelected: languageController.language == AppLanguage.tr,
+                    onTap: _isProcessing
+                        ? null
+                        : () {
+                            _changeLanguage(AppLanguage.tr);
+                          },
+                  ),
+                  const Divider(height: 1),
+                  _LanguageOptionTile(
+                    title: t.english,
+                    subtitle: 'English interface',
+                    isSelected: languageController.language == AppLanguage.en,
+                    onTap: _isProcessing
+                        ? null
+                        : () {
+                            _changeLanguage(AppLanguage.en);
+                          },
+                  ),
+                ],
+              ),
+            ),
+            SectionCard(
+              title: t.dataManagement,
               child: Column(
                 children: [
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.history),
-                    title: const Text('Değerlendirme Geçmişini Sil'),
-                    subtitle: const Text('Sadece geçmiş risk kayıtlarını siler.'),
+                    title: Text(t.clearAssessmentHistory),
+                    subtitle: Text(t.clearAssessmentHistorySubtitle),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: _isProcessing ? null : _clearHistory,
                   ),
@@ -247,10 +308,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     leading: const Icon(Icons.person_remove_outlined),
-                    title: const Text('Profil Verilerini Sil'),
-                    subtitle: const Text(
-                      'Profil ve geçmiş verilerini siler, hesabı silmez.',
-                    ),
+                    title: Text(t.deleteProfileData),
+                    subtitle: Text(t.deleteProfileDataSubtitle),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: _isProcessing ? null : _deleteProfileData,
                   ),
@@ -258,11 +317,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
             ),
             SectionCard(
-              title: 'Oturum',
+              title: t.session,
               child: Column(
                 children: [
                   PrimaryButton(
-                    text: 'Çıkış Yap',
+                    text: t.logout,
                     onPressed: _isProcessing ? null : _logout,
                     icon: Icons.logout,
                   ),
@@ -270,13 +329,13 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
               ),
             ),
             SectionCard(
-              title: 'Tehlikeli Bölge',
+              title: t.dangerZone,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Hesabınızı silerseniz profiliniz, değerlendirme geçmişiniz ve hesabınız kalıcı olarak silinir.',
-                    style: TextStyle(
+                  Text(
+                    t.deleteAccountWarning,
+                    style: const TextStyle(
                       color: Colors.black54,
                       height: 1.4,
                     ),
@@ -285,10 +344,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton.icon(
-                      onPressed:
-                          _isProcessing ? null : _deleteAccountCompletely,
+                      onPressed: _isProcessing ? null : _deleteAccountCompletely,
                       icon: const Icon(Icons.delete_forever),
-                      label: const Text('Hesabımı Kalıcı Olarak Sil'),
+                      label: Text(t.deleteAccount),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -307,6 +365,34 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _LanguageOptionTile extends StatelessWidget {
+  const _LanguageOptionTile({
+    required this.title,
+    required this.subtitle,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool isSelected;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Icon(
+        isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
+        color: isSelected ? Theme.of(context).colorScheme.primary : Colors.grey,
+      ),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      onTap: onTap,
     );
   }
 }
