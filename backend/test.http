@@ -1,0 +1,8 @@
+POST http://localhost:3000/api/ai/parse-symptoms
+Content-Type: application/json
+
+{
+  "symptomText": "20 dakikadır göğsümde baskı var, sol koluma vuruyor ve nefesim daralıyor",
+  "age": 52,
+  "gender": "Erkek"
+}
