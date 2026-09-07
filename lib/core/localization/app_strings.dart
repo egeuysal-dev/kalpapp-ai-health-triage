@@ -1235,4 +1235,257 @@ class AppStrings {
 
   String get saveProfile =>
       isEnglish ? 'Save Profile' : 'Profili Kaydet';
+
+        // About Screen
+  String get aboutHeaderSubtitle => isEnglish
+      ? 'AI and wearable-supported early warning platform'
+      : 'Yapay zeka ve akıllı bileklik destekli erken uyarı platformu';
+
+  String aboutVersionText(String version) {
+    return isEnglish
+        ? 'Version $version • Development Build'
+        : 'Sürüm $version • Geliştirme Sürümü';
+  }
+
+  String get aboutPurposeTitle =>
+      isEnglish ? 'Application Purpose' : 'Uygulamanın Amacı';
+
+  String get aboutPurposeText => isEnglish
+      ? 'KalpAPP was developed to help users quickly evaluate symptoms that may suggest a heart attack risk.\n\n'
+          'The user can select symptoms manually, write them as text, or enter them by speaking. The application evaluates these inputs using a rule-based risk engine and an AI-assisted symptom parsing system.'
+      : 'KalpAPP, kalp krizi şüphesi oluşturabilecek belirtilerin kullanıcı tarafından hızlıca değerlendirilmesine yardımcı olmak amacıyla geliştirilmiştir.\n\n'
+          'Kullanıcı; semptomlarını elle seçebilir, metin olarak yazabilir veya konuşarak giriş yapabilir. Uygulama bu verileri kural tabanlı risk motoru ve yapay zeka destekli semptom ayrıştırma sistemiyle değerlendirir.';
+
+  String get aboutWearableTrackingTitle =>
+      isEnglish ? 'Smart Wearable Monitoring' : 'Akıllı Bileklik Takibi';
+
+  String get aboutWearableTrackingText => isEnglish
+      ? 'KalpAPP is not only an individual symptom assessment application. It is also designed as an early warning platform that aims to monitor family members with heart-related risk through a smart wearable-like device.\n\n'
+          'In this prototype, a virtual/demo wearable system is used instead of a physical device. The user can add a unique device ID for a family member and monitor heart rhythm status inside the application.\n\n'
+          'In the real product, this device ID would be matched with heart rhythm and sensor data coming from a physical wearable.'
+      : 'KalpAPP yalnızca bireysel semptom değerlendirme uygulaması değildir. Uygulama aynı zamanda kalp hastalığı riski taşıyan yakınların akıllı bileklik benzeri bir cihazla takip edilmesini hedefleyen bir erken uyarı platformu olarak tasarlanmıştır.\n\n'
+          'Bu prototipte fiziksel bileklik yerine sanal/demo bileklik sistemi kullanılmaktadır. Kullanıcı, yakını için benzersiz bir cihaz kimliği ekleyebilir ve bu kişiye ait kalp ritmi durumlarını uygulama içinde takip edebilir.\n\n'
+          'Gerçek üründe bu cihaz kimliği, fiziksel bileklikten gelen kalp ritmi ve sensör verileriyle eşleştirilecektir.';
+
+  String get aboutFamilyMonitoringTitle =>
+      isEnglish ? 'Family Monitoring System' : 'Yakın Takip Sistemi';
+
+  String get aboutFamilyMonitoringText => isEnglish
+      ? 'Through the Monitored People section, the user can create a profile for a grandfather, mother, father, or another family member who may carry heart-related risk.\n\n'
+          'This profile can store information such as age, gender, relationship, device ID, disease history, previous heart attack history, hypertension, diabetes, cholesterol, and medications.\n\n'
+          'In demo mode, low heart rhythm, high heart rhythm, and critical alert scenarios can be simulated.'
+      : 'Takip Ettiklerim bölümü sayesinde kullanıcı; dedesi, annesi, babası veya kalp hastalığı riski taşıyan başka bir yakını için profil oluşturabilir.\n\n'
+          'Bu profilde kişinin yaşı, cinsiyeti, yakınlık derecesi, cihaz kimliği, hastalık geçmişi, kalp krizi öyküsü, hipertansiyon, diyabet, kolesterol ve kullanılan ilaçlar gibi bilgiler saklanabilir.\n\n'
+          'Demo modunda düşük kalp ritmi, yüksek kalp ritmi ve kritik uyarı senaryoları simüle edilebilir.';
+
+  String get aboutWearableAlertHistoryTitle =>
+      isEnglish ? 'Wearable Alert History' : 'Bileklik Uyarı Geçmişi';
+
+  String get aboutWearableAlertHistoryText => isEnglish
+      ? 'The application can save low rhythm, high rhythm, and critical rhythm alerts generated through the virtual wearable.\n\n'
+          'This allows the user to view not only the instant alert, but also previous wearable events inside the application.\n\n'
+          'In the real product, these records would be generated from live measurement data coming from the physical device.'
+      : 'Uygulama, sanal bileklik üzerinden oluşan düşük ritim, yüksek ritim ve kritik ritim uyarılarını geçmişe kaydedebilir.\n\n'
+          'Bu sayede kullanıcı sadece anlık uyarıyı değil, geçmişte oluşan bileklik olaylarını da uygulama içinden görüntüleyebilir.\n\n'
+          'Gerçek üründe bu kayıtlar, fiziksel cihazdan gelen canlı ölçüm verileriyle oluşturulacaktır.';
+
+  String get aboutMedicalWarningTitle =>
+      isEnglish ? 'Medical Warning' : 'Tıbbi Uyarı';
+
+  String get aboutMedicalWarningText => isEnglish
+      ? 'This application does not provide medical diagnosis, does not replace doctors, and is not an alternative to emergency medical services.\n\n'
+          'If serious symptoms such as chest pain, shortness of breath, cold sweating, fainting feeling, or pain spreading to the arm/jaw are present, 112 should be called without waiting for the application result.\n\n'
+          'Wearable alerts do not mean a definitive diagnosis either. When a critical alert is received, the person should be checked, and emergency help should be requested if serious symptoms are present.'
+      : 'Bu uygulama tıbbi tanı koymaz, doktor yerine geçmez ve acil sağlık hizmetlerinin alternatifi değildir.\n\n'
+          'Göğüs ağrısı, nefes darlığı, soğuk terleme, bayılma hissi veya kola/çeneye yayılan ağrı gibi ciddi belirtiler varsa uygulama sonucunu beklemeden 112 aranmalıdır.\n\n'
+          'Bileklik uyarıları da kesin tanı anlamına gelmez; kritik uyarı alındığında kişinin durumu kontrol edilmeli ve ciddi belirti varsa acil yardım alınmalıdır.';
+
+  String get aboutAnalysisSystemTitle =>
+      isEnglish ? 'Analysis System' : 'Analiz Sistemi';
+
+  String get aboutAnalysisSystemText => isEnglish
+      ? 'KalpAPP currently uses a hybrid analysis system:\n\n'
+          '• Rule-based risk engine\n'
+          '• Mock backend AI symptom parsing\n'
+          '• Local fallback analysis when backend is unavailable\n'
+          '• Manual symptom selection\n'
+          '• Virtual wearable heart rhythm simulation\n'
+          '• Wearable alert history recording\n\n'
+          'Because the main architecture is ready, real AI integration can be activated later in the backend layer.'
+      : 'KalpAPP şu anda hibrit bir analiz sistemi kullanır:\n\n'
+          '• Kural tabanlı risk motoru\n'
+          '• Mock backend AI semptom ayrıştırma\n'
+          '• Backend erişilemezse yerel yedek analiz\n'
+          '• Manuel semptom seçimi\n'
+          '• Sanal bileklik kalp ritmi simülasyonu\n'
+          '• Bileklik uyarı geçmişi kaydı\n\n'
+          'Gerçek yapay zeka entegrasyonu, uygulamanın ana mimarisi hazır olduğu için ileride backend katmanında aktif edilebilir.';
+
+  String get aboutDataSecurityTitle =>
+      isEnglish ? 'Data and Security' : 'Veri ve Güvenlik';
+
+  String get aboutDataSecurityText => isEnglish
+      ? 'The application can store profile information, health history, symptom assessment results, monitored person information, virtual wearable device IDs, and wearable alert history on Firebase infrastructure linked to the user account.\n\n'
+          'The user can delete history, profile data, or the account through the Account and Security screen.'
+      : 'Uygulama; profil bilgileri, sağlık geçmişi, semptom değerlendirme sonuçları, takip edilen yakın bilgileri, sanal bileklik cihaz kimlikleri ve bileklik uyarı geçmişini Firebase altyapısı üzerinde kullanıcı hesabına bağlı olarak saklayabilir.\n\n'
+          'Kullanıcı, Hesap ve Güvenlik ekranı üzerinden geçmişini, profil verilerini veya hesabını silebilir.';
+
+  String get aboutPrivacyTitle => isEnglish ? 'Privacy' : 'Gizlilik';
+
+  String get aboutPrivacyText => isEnglish
+      ? 'You can view the privacy and data protection information inside the application. Since the wearable and family monitoring system may include health-related data, this section should be updated with professional legal support before a real release.'
+      : 'Gizlilik ve KVKK bilgilendirme metnini uygulama içinden görüntüleyebilirsiniz. Bileklik ve yakın takip sistemi sağlık verisi niteliğinde bilgiler içerebileceği için bu bölüm gerçek yayına geçmeden önce profesyonel hukuki danışmanlıkla güncellenmelidir.';
+
+  String get openPrivacyPolicy =>
+      isEnglish ? 'Open Privacy Text' : 'Gizlilik ve KVKK Metnini Aç';
+
+  String get aboutProjectInfoTitle =>
+      isEnglish ? 'Project Information' : 'Proje Bilgisi';
+
+  String get aboutProjectInfoText => isEnglish
+      ? 'This application was developed within the scope of a software engineering project and is designed so that it can be transformed into a real health support application in the future.\n\n'
+          'The project was developed by considering individual symptom assessment, AI-assisted symptom parsing, family monitoring, virtual wearable demo module, emergency guidance, data security, and sustainable software architecture.'
+      : 'Bu uygulama yazılım mühendisliği projesi kapsamında geliştirilmiş olup, ileride gerçek bir sağlık destek uygulamasına dönüştürülebilecek şekilde tasarlanmaktadır.\n\n'
+          'Proje; bireysel semptom değerlendirme, yapay zeka destekli semptom ayrıştırma, yakın takip sistemi, sanal bileklik demo modülü, acil durum yönlendirmesi, veri güvenliği ve sürdürülebilir yazılım mimarisi dikkate alınarak geliştirilmiştir.';
+
+  String get aboutDemoModeTitle =>
+      isEnglish ? 'Demo Mode Explanation' : 'Demo Modu Açıklaması';
+
+  String get aboutDemoModeText => isEnglish
+      ? 'In this development build, wearable data is not received from a real physical device. Heart rhythm and alert states are generated through simulation buttons inside the application.\n\n'
+          'This approach is a prototype/demo logic prepared to demonstrate the product idea and user experience.'
+      : 'Bu geliştirme sürümünde bileklik verileri gerçek bir fiziksel cihazdan alınmamaktadır. Kalp ritmi ve uyarı durumları uygulama içindeki simülasyon butonlarıyla oluşturulur.\n\n'
+          'Bu yaklaşım, ürün fikrini ve kullanıcı deneyimini göstermek için hazırlanmış prototip/demo mantığıdır.';
+
+  String get aboutFooterText => isEnglish
+      ? 'KalpAPP • Development Build'
+      : 'KalpAPP • Geliştirme Sürümü';
+
+  // Privacy Policy Screen
+  String get privacyScreenTitle =>
+      isEnglish ? 'Privacy and Data Protection' : 'Gizlilik ve KVKK';
+
+  String get privacyInfoTitle =>
+      isEnglish ? 'Privacy Information' : 'Gizlilik Bilgilendirmesi';
+
+  String get privacyInfoText => isEnglish
+      ? 'KalpAPP was developed to help users assess their symptoms in case of suspected heart attack and to monitor family members who may carry risk.\n\n'
+          'This application does not provide medical diagnosis, does not replace doctors, and is intended only for information, preliminary assessment, demo monitoring, and early warning purposes.'
+      : 'KalpAPP, kullanıcının kalp krizi şüphesi durumunda semptomlarını değerlendirmesine ve riskli yakınlarını takip etmesine yardımcı olmak amacıyla geliştirilmiştir.\n\n'
+          'Bu uygulama tıbbi teşhis koymaz, doktor yerine geçmez ve yalnızca bilgilendirme, ön değerlendirme, demo takip ve erken uyarı amacı taşır.';
+
+  String get collectedUserDataTitle =>
+      isEnglish ? 'Collected User Data' : 'Toplanan Kullanıcı Verileri';
+
+  String get collectedUserDataText => isEnglish
+      ? 'The application may store full name, age, gender, health history, medications, emergency contact information, and symptom assessment results.\n\n'
+          'This data is used to create the user profile, show assessment history, and provide faster guidance in emergency situations.'
+      : 'Uygulama; ad soyad, yaş, cinsiyet, sağlık geçmişi, kullanılan ilaçlar, acil kişi bilgileri ve semptom değerlendirme sonuçlarını kaydedebilir.\n\n'
+          'Bu veriler, kullanıcının profilini oluşturmak, değerlendirme geçmişini göstermek ve acil durumda daha hızlı yönlendirme sağlamak amacıyla kullanılır.';
+
+  String get monitoredFamilyDataTitle =>
+      isEnglish ? 'Monitored Family Member Data' : 'Takip Edilen Yakın Verileri';
+
+  String get monitoredFamilyDataText => isEnglish
+      ? 'Inside KalpAPP, the user can create separate records to monitor family members who may carry heart-related risk.\n\n'
+          'These records may include the person’s name, relationship, age, gender, device ID, health history, previous heart attack history, hypertension, diabetes, cholesterol, smoking, and medication information.\n\n'
+          'This information may be considered sensitive health-related data.'
+      : 'KalpAPP içinde kullanıcı, kalp hastalığı riski taşıyan yakınlarını takip etmek için ayrı kayıtlar oluşturabilir.\n\n'
+          'Bu kayıtlarda yakının adı, yakınlık derecesi, yaşı, cinsiyeti, cihaz kimliği, sağlık geçmişi, kalp krizi öyküsü, hipertansiyon, diyabet, kolesterol, sigara kullanımı ve ilaç bilgileri saklanabilir.\n\n'
+          'Bu bilgiler hassas sağlık verisi niteliğinde olabilir.';
+
+  String get wearableDeviceIdentityTitle =>
+      isEnglish ? 'Wearable and Device ID' : 'Bileklik ve Cihaz Kimliği';
+
+  String get wearableDeviceIdentityText => isEnglish
+      ? 'The application includes a virtual wearable system. The user can add a unique device ID for a monitored family member.\n\n'
+          'Since there is no physical wearable in this prototype, device data is generated for demo/simulation purposes.\n\n'
+          'In the real product, the device ID could be matched with heart rhythm and sensor data coming from the physical wearable.'
+      : 'Uygulamada sanal bileklik sistemi bulunmaktadır. Kullanıcı, takip ettiği yakını için benzersiz bir cihaz kimliği ekleyebilir.\n\n'
+          'Bu prototipte fiziksel bileklik bulunmadığı için cihaz verileri demo/simülasyon amacıyla oluşturulur.\n\n'
+          'Gerçek üründe cihaz kimliği, fiziksel bileklikten gelen kalp ritmi ve sensör verileriyle eşleştirilebilir.';
+
+  String get privacyWearableAlertHistoryTitle =>
+      isEnglish ? 'Wearable Alert History' : 'Bileklik Uyarı Geçmişi';
+
+  String get privacyWearableAlertHistoryText => isEnglish
+      ? 'The application may save low heart rhythm, high heart rhythm, and critical alert events generated through the virtual wearable.\n\n'
+          'These records may include the monitored person’s name, device ID, alert type, heart rate value, description message, and date information.\n\n'
+          'In the real product, this data would be generated from measurements coming from the physical device.'
+      : 'Uygulama, sanal bileklik üzerinden oluşan düşük kalp ritmi, yüksek kalp ritmi ve kritik uyarı olaylarını geçmişe kaydedebilir.\n\n'
+          'Bu kayıtlar; takip edilen kişinin adı, cihaz kimliği, uyarı tipi, kalp ritmi değeri, açıklama mesajı ve tarih bilgisini içerebilir.\n\n'
+          'Gerçek üründe bu veriler fiziksel cihazdan gelen ölçümlerle oluşturulacaktır.';
+
+  String get healthDataTitle => isEnglish ? 'Health Data' : 'Sağlık Verileri';
+
+  String get healthDataText => isEnglish
+      ? 'Heart disease history, previous heart attack, diabetes, hypertension, cholesterol, heart rhythm values, and similar information may be considered sensitive health-related data.\n\n'
+          'Therefore, the application aims to store user data securely during development.\n\n'
+          'Before a real release, professional legal evaluation should be made according to KVKK and relevant health data regulations.'
+      : 'Kalp hastalığı geçmişi, daha önce geçirilen kalp krizi, diyabet, hipertansiyon, kolesterol, kalp ritmi değerleri ve benzeri bilgiler hassas sağlık verisi niteliğinde olabilir.\n\n'
+          'Bu nedenle uygulama geliştirilirken kullanıcı verilerinin güvenli şekilde saklanması hedeflenmektedir.\n\n'
+          'Gerçek yayın öncesinde KVKK ve ilgili sağlık verisi mevzuatına uygun profesyonel hukuki değerlendirme yapılmalıdır.';
+
+  String get aiUsageTitle =>
+      isEnglish ? 'Artificial Intelligence Usage' : 'Yapay Zeka Kullanımı';
+
+  String get aiUsageText => isEnglish
+      ? 'AI-assisted features in the application may be used to convert symptoms written as free text or entered by speech into structured symptom fields.\n\n'
+          'The AI system does not provide diagnosis by itself and does not make final medical decisions. Risk assessment works together with the rule-based system.'
+      : 'Uygulamadaki yapay zeka destekli özellikler, kullanıcının serbest metin olarak yazdığı veya konuşarak aktardığı semptomları yapılandırılmış semptom alanlarına dönüştürmek için kullanılabilir.\n\n'
+          'Yapay zeka sistemi tek başına teşhis koymaz ve nihai tıbbi karar vermez. Risk değerlendirme, kural tabanlı sistem ile birlikte çalışır.';
+
+  String get speechSymptomInputTitle =>
+      isEnglish ? 'Speech-Based Symptom Input' : 'Konuşma ile Semptom Girişi';
+
+  String get speechSymptomInputText => isEnglish
+      ? 'The application may offer speech-based symptom input by considering situations where the user cannot type.\n\n'
+          'This feature may require microphone permission. Speech recognition depends on the device or the speech recognition infrastructure used by the platform.'
+      : 'Uygulama, kullanıcının yazı yazamayacağı durumları dikkate alarak konuşma ile semptom girişi özelliği sunabilir.\n\n'
+          'Bu özellik cihazın mikrofon iznine ihtiyaç duyabilir. Konuşma tanıma işlemi cihazın veya kullanılan platformun konuşma tanıma altyapısına bağlı olarak çalışabilir.';
+
+  String get dataUsagePurposeTitle =>
+      isEnglish ? 'Purpose of Data Usage' : 'Verilerin Kullanım Amacı';
+
+  String get dataUsagePurposeText => isEnglish
+      ? 'Collected data may be used to perform symptom assessment, show assessment history, monitor family members, display wearable alerts, provide a demo product experience, and guide the user faster in emergency situations.'
+      : 'Toplanan veriler; semptom değerlendirmesi yapmak, değerlendirme geçmişini göstermek, takip edilen yakınların durumunu izlemek, bileklik uyarılarını göstermek, demo ürün deneyimi sunmak ve kullanıcıya acil durumda daha hızlı yönlendirme sağlamak amacıyla kullanılabilir.';
+
+  String get privacyEmergencyWarningTitle =>
+      isEnglish ? 'Emergency Warning' : 'Acil Durum Uyarısı';
+
+  String get privacyEmergencyWarningText => isEnglish
+      ? 'If serious symptoms such as chest pain, shortness of breath, cold sweating, fainting feeling, or pain spreading to the arm/jaw are present, 112 should be called without delay.\n\n'
+          'Wearable alerts do not mean a definitive medical diagnosis either. When a critical rhythm alert is received, the person should be checked, and emergency help should be requested if serious symptoms are present.\n\n'
+          'Results in the application are not definitive medical diagnoses.'
+      : 'Göğüs ağrısı, nefes darlığı, soğuk terleme, bayılma hissi veya kola/çeneye yayılan ağrı gibi ciddi belirtiler varsa vakit kaybetmeden 112 aranmalıdır.\n\n'
+          'Bileklik uyarıları da kesin tıbbi tanı anlamına gelmez. Kritik ritim uyarısı alındığında kişi kontrol edilmeli ve ciddi belirti varsa acil yardım alınmalıdır.\n\n'
+          'Uygulamadaki sonuçlar kesin tıbbi tanı değildir.';
+
+  String get privacyDemoPrototypeTitle =>
+      isEnglish ? 'Demo and Prototype Explanation' : 'Demo ve Prototip Açıklaması';
+
+  String get privacyDemoPrototypeText => isEnglish
+      ? 'In this development build, wearable data is not received from a real physical device. Heart rhythm and alert states are generated through simulation buttons inside the application.\n\n'
+          'This feature is a demo/prototype function prepared to demonstrate the product idea and user experience.'
+      : 'Bu geliştirme sürümünde bileklik verileri gerçek bir fiziksel cihazdan alınmamaktadır. Kalp ritmi ve uyarı durumları uygulama içindeki simülasyon butonlarıyla oluşturulur.\n\n'
+          'Bu özellik, ürün fikrini ve kullanıcı deneyimini göstermek için hazırlanmış demo/prototip işlevdir.';
+
+  String get dataDeletionTitle => isEnglish ? 'Data Deletion' : 'Veri Silme';
+
+  String get dataDeletionText => isEnglish
+      ? 'The user can delete assessment history, profile data, or the account from the Account and Security screen.\n\n'
+          'Wearable alert history can be deleted from the related history screen.\n\n'
+          'Account deletion cannot be undone.'
+      : 'Kullanıcı, Hesap ve Güvenlik ekranından değerlendirme geçmişini, profil verilerini veya hesabını silebilir.\n\n'
+          'Bileklik uyarı geçmişi, ilgili geçmiş ekranından silinebilir.\n\n'
+          'Hesap silme işlemi geri alınamaz.';
+
+  String get privacyNoteTitle => isEnglish ? 'Note' : 'Not';
+
+  String get privacyNoteText => isEnglish
+      ? 'This text is a draft information notice prepared for the development stage. Before the application is released for real use, the privacy policy, explicit consent text, and terms of use should be prepared professionally with legal support.\n\n'
+          'Explicit consent, data security, and retention policies should be evaluated separately, especially for health data and family monitoring data belonging to third parties.'
+      : 'Bu metin geliştirme aşaması için hazırlanmış taslak bilgilendirmedir. Uygulama gerçek kullanıma açılmadan önce hukuki danışmanlık alınarak KVKK, gizlilik politikası, açık rıza metni ve kullanım şartları profesyonel şekilde hazırlanmalıdır.\n\n'
+          'Özellikle sağlık verileri ve üçüncü kişilere ait yakın takip verileri için açık rıza, veri güvenliği ve saklama politikaları ayrıca değerlendirilmelidir.';
 }

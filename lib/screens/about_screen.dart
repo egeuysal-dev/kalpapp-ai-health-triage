@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../core/localization/app_strings.dart';
 import '../core/widgets/section_card.dart';
 import 'privacy_policy_screen.dart';
 
@@ -6,13 +8,14 @@ class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
 
   static const String appVersion = '1.0.0';
-  static const String buildStatus = 'Geliştirme Sürümü';
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Uygulama Hakkında'),
+        title: Text(t.aboutApp),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -20,83 +23,66 @@ class AboutScreen extends StatelessWidget {
           children: [
             _buildHeaderCard(context),
             const SizedBox(height: 16),
-            const SectionCard(
-              title: 'Uygulamanın Amacı',
+            SectionCard(
+              title: t.aboutPurposeTitle,
               child: Text(
-                'KalpAPP, kalp krizi şüphesi oluşturabilecek belirtilerin kullanıcı tarafından hızlıca değerlendirilmesine yardımcı olmak amacıyla geliştirilmiştir.\n\n'
-                'Kullanıcı; semptomlarını elle seçebilir, metin olarak yazabilir veya konuşarak giriş yapabilir. Uygulama bu verileri kural tabanlı risk motoru ve yapay zeka destekli semptom ayrıştırma sistemiyle değerlendirir.',
-                style: TextStyle(height: 1.5),
+                t.aboutPurposeText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
-            const SectionCard(
-              title: 'Akıllı Bileklik Takibi',
+            SectionCard(
+              title: t.aboutWearableTrackingTitle,
               child: Text(
-                'KalpAPP yalnızca bireysel semptom değerlendirme uygulaması değildir. Uygulama aynı zamanda kalp hastalığı riski taşıyan yakınların akıllı bileklik benzeri bir cihazla takip edilmesini hedefleyen bir erken uyarı platformu olarak tasarlanmıştır.\n\n'
-                'Bu prototipte fiziksel bileklik yerine sanal/demo bileklik sistemi kullanılmaktadır. Kullanıcı, yakını için benzersiz bir cihaz kimliği ekleyebilir ve bu kişiye ait kalp ritmi durumlarını uygulama içinde takip edebilir.\n\n'
-                'Gerçek üründe bu cihaz kimliği, fiziksel bileklikten gelen kalp ritmi ve sensör verileriyle eşleştirilecektir.',
-                style: TextStyle(height: 1.5),
+                t.aboutWearableTrackingText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
-            const SectionCard(
-              title: 'Yakın Takip Sistemi',
+            SectionCard(
+              title: t.aboutFamilyMonitoringTitle,
               child: Text(
-                'Takip Ettiklerim bölümü sayesinde kullanıcı; dedesi, annesi, babası veya kalp hastalığı riski taşıyan başka bir yakını için profil oluşturabilir.\n\n'
-                'Bu profilde kişinin yaşı, cinsiyeti, yakınlık derecesi, cihaz kimliği, hastalık geçmişi, kalp krizi öyküsü, hipertansiyon, diyabet, kolesterol ve kullanılan ilaçlar gibi bilgiler saklanabilir.\n\n'
-                'Demo modunda düşük kalp ritmi, yüksek kalp ritmi ve kritik uyarı senaryoları simüle edilebilir.',
-                style: TextStyle(height: 1.5),
+                t.aboutFamilyMonitoringText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
-            const SectionCard(
-              title: 'Bileklik Uyarı Geçmişi',
+            SectionCard(
+              title: t.aboutWearableAlertHistoryTitle,
               child: Text(
-                'Uygulama, sanal bileklik üzerinden oluşan düşük ritim, yüksek ritim ve kritik ritim uyarılarını geçmişe kaydedebilir.\n\n'
-                'Bu sayede kullanıcı sadece anlık uyarıyı değil, geçmişte oluşan bileklik olaylarını da uygulama içinden görüntüleyebilir.\n\n'
-                'Gerçek üründe bu kayıtlar, fiziksel cihazdan gelen canlı ölçüm verileriyle oluşturulacaktır.',
-                style: TextStyle(height: 1.5),
+                t.aboutWearableAlertHistoryText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
-            const SectionCard(
-              title: 'Tıbbi Uyarı',
+            SectionCard(
+              title: t.aboutMedicalWarningTitle,
               child: Text(
-                'Bu uygulama tıbbi tanı koymaz, doktor yerine geçmez ve acil sağlık hizmetlerinin alternatifi değildir.\n\n'
-                'Göğüs ağrısı, nefes darlığı, soğuk terleme, bayılma hissi veya kola/çeneye yayılan ağrı gibi ciddi belirtiler varsa uygulama sonucunu beklemeden 112 aranmalıdır.\n\n'
-                'Bileklik uyarıları da kesin tanı anlamına gelmez; kritik uyarı alındığında kişinin durumu kontrol edilmeli ve ciddi belirti varsa acil yardım alınmalıdır.',
-                style: TextStyle(
+                t.aboutMedicalWarningText,
+                style: const TextStyle(
                   height: 1.5,
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-            const SectionCard(
-              title: 'Analiz Sistemi',
+            SectionCard(
+              title: t.aboutAnalysisSystemTitle,
               child: Text(
-                'KalpAPP şu anda hibrit bir analiz sistemi kullanır:\n\n'
-                '• Kural tabanlı risk motoru\n'
-                '• Mock backend AI semptom ayrıştırma\n'
-                '• Backend erişilemezse yerel yedek analiz\n'
-                '• Manuel semptom seçimi\n'
-                '• Sanal bileklik kalp ritmi simülasyonu\n'
-                '• Bileklik uyarı geçmişi kaydı\n\n'
-                'Gerçek yapay zeka entegrasyonu, uygulamanın ana mimarisi hazır olduğu için ileride backend katmanında aktif edilebilir.',
-                style: TextStyle(height: 1.5),
-              ),
-            ),
-            const SectionCard(
-              title: 'Veri ve Güvenlik',
-              child: Text(
-                'Uygulama; profil bilgileri, sağlık geçmişi, semptom değerlendirme sonuçları, takip edilen yakın bilgileri, sanal bileklik cihaz kimlikleri ve bileklik uyarı geçmişini Firebase altyapısı üzerinde kullanıcı hesabına bağlı olarak saklayabilir.\n\n'
-                'Kullanıcı, Hesap ve Güvenlik ekranı üzerinden geçmişini, profil verilerini veya hesabını silebilir.',
-                style: TextStyle(height: 1.5),
+                t.aboutAnalysisSystemText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
             SectionCard(
-              title: 'Gizlilik',
+              title: t.aboutDataSecurityTitle,
+              child: Text(
+                t.aboutDataSecurityText,
+                style: const TextStyle(height: 1.5),
+              ),
+            ),
+            SectionCard(
+              title: t.aboutPrivacyTitle,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Gizlilik ve KVKK bilgilendirme metnini uygulama içinden görüntüleyebilirsiniz. Bileklik ve yakın takip sistemi sağlık verisi niteliğinde bilgiler içerebileceği için bu bölüm gerçek yayına geçmeden önce profesyonel hukuki danışmanlıkla güncellenmelidir.',
-                    style: TextStyle(height: 1.5),
+                  Text(
+                    t.aboutPrivacyText,
+                    style: const TextStyle(height: 1.5),
                   ),
                   const SizedBox(height: 12),
                   SizedBox(
@@ -111,32 +97,30 @@ class AboutScreen extends StatelessWidget {
                         );
                       },
                       icon: const Icon(Icons.privacy_tip_outlined),
-                      label: const Text('Gizlilik ve KVKK Metnini Aç'),
+                      label: Text(t.openPrivacyPolicy),
                     ),
                   ),
                 ],
               ),
             ),
-            const SectionCard(
-              title: 'Proje Bilgisi',
+            SectionCard(
+              title: t.aboutProjectInfoTitle,
               child: Text(
-                'Bu uygulama yazılım mühendisliği projesi kapsamında geliştirilmiş olup, ileride gerçek bir sağlık destek uygulamasına dönüştürülebilecek şekilde tasarlanmaktadır.\n\n'
-                'Proje; bireysel semptom değerlendirme, yapay zeka destekli semptom ayrıştırma, yakın takip sistemi, sanal bileklik demo modülü, acil durum yönlendirmesi, veri güvenliği ve sürdürülebilir yazılım mimarisi dikkate alınarak geliştirilmiştir.',
-                style: TextStyle(height: 1.5),
+                t.aboutProjectInfoText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
-            const SectionCard(
-              title: 'Demo Modu Açıklaması',
+            SectionCard(
+              title: t.aboutDemoModeTitle,
               child: Text(
-                'Bu geliştirme sürümünde bileklik verileri gerçek bir fiziksel cihazdan alınmamaktadır. Kalp ritmi ve uyarı durumları uygulama içindeki simülasyon butonlarıyla oluşturulur.\n\n'
-                'Bu yaklaşım, ürün fikrini ve kullanıcı deneyimini göstermek için hazırlanmış prototip/demo mantığıdır.',
-                style: TextStyle(height: 1.5),
+                t.aboutDemoModeText,
+                style: const TextStyle(height: 1.5),
               ),
             ),
             const SizedBox(height: 12),
-            const Text(
-              'KalpAPP • Geliştirme Sürümü',
-              style: TextStyle(
+            Text(
+              t.aboutFooterText,
+              style: const TextStyle(
                 color: Colors.black45,
                 fontSize: 13,
               ),
@@ -149,6 +133,8 @@ class AboutScreen extends StatelessWidget {
   }
 
   Widget _buildHeaderCard(BuildContext context) {
+    final t = AppStrings.of(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(22),
@@ -173,7 +159,7 @@ class AboutScreen extends StatelessWidget {
             width: 78,
             height: 78,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
+              color: Colors.white.withValues(alpha: 0.18),
               borderRadius: BorderRadius.circular(22),
             ),
             child: const Icon(
@@ -192,10 +178,10 @@ class AboutScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Yapay zeka ve akıllı bileklik destekli erken uyarı platformu',
+          Text(
+            t.aboutHeaderSubtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white70,
               fontSize: 14,
               height: 1.4,
@@ -208,12 +194,12 @@ class AboutScreen extends StatelessWidget {
               vertical: 8,
             ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.16),
+              color: Colors.white.withValues(alpha: 0.16),
               borderRadius: BorderRadius.circular(30),
             ),
-            child: const Text(
-              'Sürüm $appVersion • $buildStatus',
-              style: TextStyle(
+            child: Text(
+              t.aboutVersionText(appVersion),
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
               ),
